@@ -41,7 +41,12 @@ export function HomePage() {
 
       <main className={styles.main}>
         <h2 className="visually-hidden">Today’s reveal</h2>
-        <TodaysReveal image={calendar.today.reveal} />
+        <TodaysReveal
+          day={calendar.today.day}
+          title={calendar.today.title}
+          nextTitle={calendar.today.nextTitle}
+          image={calendar.today.reveal}
+        />
 
         <div className={styles.tabs}>
           <CalendarTabs options={tabs} value={activeTab} onChange={setActiveTab} />

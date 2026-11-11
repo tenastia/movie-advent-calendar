@@ -1,0 +1,11 @@
+/*
+ * The letters fill the whole viewport behind the page, as in the lab.
+ * z-index -1 keeps every part of the UI above the canvas; the canvas clears
+ * to the page background colour, so it reads as the page itself.
+ */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}

@@ -21,3 +21,11 @@
   height: 100%;
   object-fit: cover;
 }
+
+/* Placeholder that holds the reveal's place while the letters draw behind the page. */
+.frame {
+  width: 638px;
+  max-width: 100%;
+  aspect-ratio: 638 / 441;
+  margin: 0;
+}

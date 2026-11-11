@@ -22,17 +22,38 @@ npm run dev
 ## Project layout
 
 ```
+lab/index.html     Entry for the motion lab page (/lab/)
 src/
   assets/          Images and icons exported from Figma
   components/      UI building blocks (one folder per component, CSS Modules)
   data/            Types and mock calendar data
+  lab/             The motion lab UI (sliders, transport, recorder)
   lib/             Framework-free helpers (countdown maths)
+  motion/          The letter engine, shaders and presets
   pages/HomePage/  The home page
   styles/          Design tokens (mirrors Figma variables) and global styles
 ```
 
 Styling uses CSS Modules plus CSS custom properties. `src/styles/tokens.css` mirrors the Figma
 variables (`Colour/Border/nav-border` → `--colour-border-nav-border`), so prefer a token over a raw value.
+
+## Letter motion
+
+Today's number is drawn by a WebGL letter engine (`src/motion`, Three.js via React Three Fiber) in a
+full-viewport canvas behind the page, centred on the reveal frame. It runs on the visitor's clock:
+
+| Local time    | What happens                                             |
+| ------------- | -------------------------------------------------------- |
+| 00:00 → 06:00 | The number decays letter by letter                       |
+| 06:00 → 12:00 | Letters drift back one by one and assemble the title     |
+| 12:00 → 24:00 | The title holds; at midnight the next number fades in    |
+
+- **Motion lab:** `/lab/` tunes every parameter live. "Copy preset" puts the JSON on the clipboard; save
+  it as `src/motion/presets/<name>.json`.
+- **Which preset the calendar uses:** `CALENDAR_PRESET_KEY` in `src/motion/presets/index.ts`.
+- **Checking any moment:** `?time=03:00` starts the day at 03:00; `?speed=720` plays the whole day in
+  2 minutes. Both work together.
+- Browsers without WebGL see the static image from `src/assets/reveal`.
 
 ## Fonts
 
