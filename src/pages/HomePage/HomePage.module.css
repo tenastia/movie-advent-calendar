@@ -1,0 +1,51 @@
+/*
+ * Vertical rhythm follows the 1440×880 Figma frame: at an 880px-tall viewport
+ * every block lands on its design coordinate; taller viewports centre the column.
+ */
+.page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 20.5px 24px 69px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 38.5px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.tabs {
+  margin-top: 18px;
+}
+
+.progress {
+  margin-top: 58px;
+}
+
+.guess {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 35px;
+}
+
+/* Keep content clear of the fixed nav rail on narrow screens. */
+@media (max-width: 900px) {
+  .page {
+    padding-inline: 84px 16px;
+  }
+}

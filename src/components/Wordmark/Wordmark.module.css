@@ -1,0 +1,22 @@
+.wordmark {
+  display: flex;
+  align-items: baseline;
+  gap: 16.162px;
+  margin: 0;
+  color: #fff;
+  font-weight: var(--font-weight-regular);
+  white-space: nowrap;
+}
+
+.sans {
+  font-weight: var(--font-weight-light);
+  font-size: 16.162px;
+  line-height: 19px;
+  letter-spacing: 0.6465px;
+}
+
+.script {
+  font-family: var(--font-script);
+  font-size: 29.838px;
+  line-height: 47px;
+}

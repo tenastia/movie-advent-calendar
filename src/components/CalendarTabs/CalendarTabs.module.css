@@ -1,0 +1,46 @@
+.tabs {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.tab {
+  margin: 0;
+  padding: 6px 8px;
+  /* Transparent border keeps both tabs the same size when the selection changes. */
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-label-small);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: var(--font-weight-regular);
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.64px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 120ms ease-out,
+    background-color 120ms ease-out,
+    border-color 120ms ease-out;
+}
+
+.tab:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.tab[aria-pressed='true'] {
+  background: var(--colour-background-card-background);
+  border-color: var(--colour-border-nav-border);
+  color: #fff;
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--colour-border-input-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab {
+    transition: none;
+  }
+}
