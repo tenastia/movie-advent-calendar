@@ -24,6 +24,10 @@ export interface Calendar {
   attemptsPerDay: number;
   today: {
     day: number;
+    /** Today's movie. Mock only: the answer must come from the server once there is a backend. */
+    title: string;
+    /** Tomorrow's movie; its letters form the number that fades in at midnight. */
+    nextTitle?: string;
     reveal: RevealImage;
   };
   /** Days already revealed, oldest first. */

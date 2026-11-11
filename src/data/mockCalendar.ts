@@ -11,6 +11,7 @@ export const mockCalendar: Calendar = {
   attemptsPerDay: 3,
   today: {
     day: 9,
+    title: 'The Holdovers',
     reveal: {
       src: day09Reveal,
       alt: 'Today’s reveal: the number 09 spelled out in letters that hide the movie title',
