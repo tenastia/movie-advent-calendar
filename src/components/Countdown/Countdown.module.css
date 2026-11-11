@@ -1,0 +1,16 @@
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 36px;
+  background: var(--colour-background-background);
+  border: 1px solid var(--colour-border-nav-border);
+  border-radius: 36px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: var(--font-weight-thin);
+  font-size: 12px;
+  line-height: 14px;
+  /* Keeps the pill from jittering as the digits tick. */
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

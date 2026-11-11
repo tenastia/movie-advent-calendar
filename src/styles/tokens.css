@@ -1,0 +1,42 @@
+/*
+ * Design tokens mirrored from the Figma file's variables
+ * (Movie Advent Calendar → MainScreen). Names follow the Figma
+ * collection paths: "Colour/Border/nav-border" → --colour-border-nav-border.
+ */
+:root {
+  /* Colour / Background */
+  --colour-background-background: #111111;
+  --colour-background-card-background: #171717;
+
+  /* Colour / Border */
+  --colour-border-nav-border: #1c1c1c;
+  --colour-border-card-border: #292929;
+  --colour-border-input-action: #a0a0a0;
+  --colour-border-input-focus: rgba(255, 255, 255, 0.9);
+
+  /* Colour / Icon */
+  --colour-icon-icon-action: #a0a0a0;
+  --colour-icon-icon-inactive: #4d4d4d;
+
+  /* Colour / Typography */
+  --colour-typography-input-text: rgba(255, 255, 255, 0.4);
+  --colour-typography-label: rgba(255, 255, 255, 0.3);
+  --colour-typography-number-past: rgba(255, 255, 255, 0.3);
+  --colour-typography-movie-past: rgba(255, 255, 255, 0.3);
+  --colour-typography-number-current: rgba(255, 255, 255, 0.8);
+  --colour-typography-movie-current: rgba(255, 255, 255, 0.6);
+
+  /* Border radius */
+  --border-radius-nav: 18px;
+  --border-radius-input-field: 14px;
+  --border-radius-card-small: 8px;
+  --border-radius-label-small: 3px;
+
+  /* Typography (not Figma variables; from the text styles used in the design) */
+  --font-sans: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Helvetica Neue', Arial,
+    sans-serif;
+  --font-script: 'Monsieur La Doulaise', cursive;
+  --font-weight-thin: 100;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+}

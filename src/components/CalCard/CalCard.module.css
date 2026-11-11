@@ -1,0 +1,64 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 167px;
+  height: 168px;
+  padding: 16px;
+  background: var(--colour-background-card-background);
+  border: 1px solid var(--colour-border-card-border);
+  border-radius: var(--border-radius-card-small);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+}
+
+.day {
+  margin: 0;
+  font-weight: var(--font-weight-regular);
+  font-size: 48px;
+  line-height: 48px;
+  /* Trim the line box to the digits' cap height, as in Figma. */
+  text-box: trim-both cap alphabetic;
+}
+
+@supports not (text-box: trim-both cap alphabetic) {
+  .day {
+    line-height: 0.71;
+  }
+}
+
+.title {
+  display: -webkit-box;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-weight: var(--font-weight-light);
+  font-size: 15px;
+  line-height: 18px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.past .day {
+  color: var(--colour-typography-number-past);
+}
+
+.past .title {
+  color: var(--colour-typography-movie-past);
+}
+
+.current .day {
+  color: var(--colour-typography-number-current);
+}
+
+.current .title {
+  color: var(--colour-typography-movie-current);
+}

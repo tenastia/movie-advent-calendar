@@ -1,0 +1,23 @@
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px 3px;
+  background: var(--colour-background-card-background);
+  border-radius: var(--border-radius-label-small);
+  font-weight: var(--font-weight-regular);
+  line-height: 14px;
+  white-space: nowrap;
+}
+
+/* No translucent colour here: browsers apply text alpha to colour emoji, Figma doesn't. */
+.emoji {
+  font-size: 11px;
+  letter-spacing: 0.33px;
+}
+
+.text {
+  color: var(--colour-typography-label);
+  font-size: 12px;
+  letter-spacing: 0.36px;
+}

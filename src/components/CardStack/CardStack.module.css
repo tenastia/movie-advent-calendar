@@ -1,0 +1,34 @@
+.stack {
+  position: absolute;
+  top: 50%;
+  /* 1160px from the left of the 1440px design frame = 440px right of centre. */
+  left: calc(50% + 440px);
+  width: 188.32px;
+  height: 206.16px;
+  transform: translateY(-50%);
+}
+
+.pile {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  position: absolute;
+  top: var(--y);
+  left: var(--x);
+  transform: rotate(var(--rotate));
+}
+
+/* Below the width where the pile fits beside the reveal, drop it under the form. */
+@media (max-width: 1279px) {
+  .stack {
+    position: static;
+    margin-top: 56px;
+    transform: none;
+  }
+}
