@@ -1,14 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { CalendarTabs } from '../../components/CalendarTabs/CalendarTabs';
 import { CardStack } from '../../components/CardStack/CardStack';
-import { Countdown } from '../../components/Countdown/Countdown';
 import { GuessForm } from '../../components/GuessForm/GuessForm';
-import { NavBar } from '../../components/NavBar/NavBar';
 import { ProgressTrack } from '../../components/ProgressTrack/ProgressTrack';
+import { SiteHeader } from '../../components/SiteHeader/SiteHeader';
 import { TodaysReveal } from '../../components/TodaysReveal/TodaysReveal';
-import { Wordmark } from '../../components/Wordmark/Wordmark';
 import { mockCalendar } from '../../data/mockCalendar';
-import { getNextRevealAt } from '../../lib/countdown';
 import styles from './HomePage.module.css';
 
 type CalendarTab = 'mine' | 'others';
@@ -17,11 +14,6 @@ export function HomePage() {
   const calendar = mockCalendar;
   const [activeTab, setActiveTab] = useState<CalendarTab>('mine');
   const [guesses, setGuesses] = useState<string[]>([]);
-
-  const nextRevealAt = useMemo(
-    () => getNextRevealAt(new Date(), calendar.revealTime),
-    [calendar.revealTime],
-  );
 
   const tabs = [
     { id: 'mine', label: `${calendar.owner}’s Calendar` },
@@ -32,12 +24,9 @@ export function HomePage() {
 
   return (
     <div className={styles.page}>
-      <NavBar active="home" />
-
-      <header className={styles.header}>
-        <Wordmark />
-        <Countdown target={nextRevealAt} label="Time until the next reveal" />
-      </header>
+      <div className={styles.header}>
+        <SiteHeader revealTime={calendar.revealTime} />
+      </div>
 
       <main className={styles.main}>
         <h2 className="visually-hidden">Today’s reveal</h2>

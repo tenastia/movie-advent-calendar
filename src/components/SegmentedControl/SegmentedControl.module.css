@@ -1,0 +1,65 @@
+.group {
+  display: flex;
+  align-items: center;
+}
+
+.option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 86px;
+  /* 1px border + 9px padding + 17px line = the design's 37px height. */
+  padding: 9px 16px;
+  background: var(--colour-border-card-border);
+  border: 1px solid #606060;
+  color: #fff;
+  font-family: var(--font-inter);
+  font-weight: var(--font-weight-medium);
+  font-size: 14px;
+  line-height: 17px;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 120ms ease-out;
+}
+
+/* Adjacent segments share a border. */
+.option + .option {
+  margin-left: -1px;
+}
+
+.option:first-child {
+  border-radius: 36px 0 0 36px;
+}
+
+.option:last-child {
+  border-radius: 0 36px 36px 0;
+}
+
+.option:hover {
+  background: #333;
+}
+
+.selected,
+.selected:hover {
+  background: #525252;
+}
+
+.option:has(.radio:focus-visible) {
+  z-index: 1;
+  outline: 2px solid var(--colour-border-input-focus);
+  outline-offset: 2px;
+}
+
+.radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .option {
+    transition: none;
+  }
+}

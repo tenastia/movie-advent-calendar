@@ -1,0 +1,97 @@
+/*
+ * Follows the 1440×880 Figma frame: at an 880px-tall viewport the header and
+ * the two panels land on their design coordinates; taller viewports centre them.
+ */
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* Side padding keeps the panels clear of the fixed nav rail. */
+  padding: 20.5px 84px 65px;
+}
+
+.header {
+  margin-bottom: 21.5px;
+}
+
+.content {
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+  width: 100%;
+  max-width: 1272px;
+}
+
+.content > :last-child {
+  flex: 1 1 0;
+}
+
+.builder {
+  display: flex;
+  flex: 0 0 415px;
+  flex-direction: column;
+  min-width: 0;
+  padding: 32px 24px 24px;
+  background: var(--colour-background-card-background);
+  border-radius: var(--border-radius-section);
+}
+
+.intro {
+  margin: 0;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-regular);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.nameField {
+  margin-top: 30px;
+}
+
+.daysField {
+  margin-top: 35px;
+}
+
+.label {
+  margin: 0;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-light);
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 48px;
+}
+
+.titlesHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 24px;
+}
+
+/* Stack the panels once they no longer fit side by side. */
+@media (max-width: 1099px) {
+  .content {
+    flex-direction: column;
+    max-width: 843px;
+  }
+
+  .builder {
+    flex-basis: auto;
+  }
+}

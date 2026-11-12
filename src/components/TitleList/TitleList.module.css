@@ -1,0 +1,138 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.list {
+  width: 100%;
+  /* Sized so the panel matches the calendar view's height; the rest scrolls. */
+  height: 248px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  scrollbar-color: #333 transparent;
+  scrollbar-width: thin;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 8px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background-color 120ms ease-out;
+}
+
+/* Neighbouring rows share one divider. */
+.row + .row {
+  margin-top: -1px;
+}
+
+.row:focus-within {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.dragging {
+  opacity: 0.4;
+}
+
+.dropTarget {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.date {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.dayNumber {
+  width: 46px;
+  font-size: 36px;
+  line-height: 36px;
+}
+
+.month {
+  font-size: 10px;
+  line-height: 10px;
+}
+
+.input {
+  flex: 1;
+  /* Zero base width: otherwise the input's intrinsic size widens the panel. */
+  width: 0;
+  min-width: 0;
+  height: 44px;
+  margin: 0;
+  padding: 8px 36px 8px 0;
+  background: transparent;
+  border: 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: var(--font-weight-light);
+  font-size: 16px;
+  line-height: 19px;
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--colour-typography-input-text);
+  opacity: 1;
+}
+
+.handle {
+  position: relative;
+  flex: none;
+  width: 16px;
+  height: 8px;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: grab;
+  touch-action: none;
+}
+
+/* Larger hit area than the 16×8 glyph. */
+.handle::before {
+  position: absolute;
+  inset: -14px -10px;
+  content: '';
+}
+
+/* The exported SVG carries half a pixel of stroke on each side. */
+.handle img {
+  position: absolute;
+  top: -0.5px;
+  left: -0.5px;
+}
+
+.handle:active {
+  cursor: grabbing;
+}
+
+.handle:focus-visible {
+  border-radius: 2px;
+  outline: 2px solid var(--colour-border-input-focus);
+  outline-offset: 4px;
+}
+
+.scrollHint {
+  margin: 0;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-light);
+  font-size: 14px;
+  line-height: 17px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: none;
+  }
+}

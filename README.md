@@ -40,10 +40,22 @@ variables (`Colour/Border/nav-border` → `--colour-border-nav-border`), so pref
   **Inter**, which is self-hosted via `@fontsource`.
 - **Monsieur La Doulaise** (the "Advent" script) is self-hosted via `@fontsource`.
 
+## Pages
+
+| Route     | Page                                                                                      |
+| --------- | ----------------------------------------------------------------------------------------- |
+| `/`       | Home: today's reveal, guessing, and the pile of recent days                               |
+| `/create` | Create a calendar: name, length, a movie title per day (calendar or list view), preview |
+
+Routing uses React Router. Netlify serves `index.html` for every path (`public/_redirects`), so deep links work.
+
 ## Current state
 
-The home page is built against mock data in `src/data/mockCalendar.ts`. Not built yet:
+Pages run on mock data (`src/data/mockCalendar.ts`) and local state. Not built yet:
 
 - Guesses only count down the remaining attempts. Nothing checks them against an answer yet.
 - The countdown shows the time until the next daily reveal at 19:00 local time.
-- The "Create" and "Calendars" nav links and the "Other Calendars" tab don't have pages yet.
+- Create page: "Share the Calendar" does nothing yet, the preview always shows the sample reveal, and
+  the reveal styles (Drifting / Blizzard / Image) can be selected but don't change the preview.
+  A draft is lost on reload.
+- The "Calendars" nav link and the "Other Calendars" tab don't have pages yet.

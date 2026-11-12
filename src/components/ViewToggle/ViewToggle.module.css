@@ -1,0 +1,58 @@
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.button {
+  position: relative;
+  display: block;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.button svg {
+  position: relative;
+  display: block;
+}
+
+/* Selection circle: the 24px, 5%-white ellipse from the Figma icon export. */
+.button::before {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  opacity: 0;
+  content: '';
+  transition: opacity 120ms ease-out;
+}
+
+.button[aria-pressed='true']::before {
+  opacity: 1;
+}
+
+.button:hover::before {
+  opacity: 0.6;
+}
+
+.button[aria-pressed='true']:hover::before {
+  opacity: 1;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--colour-border-input-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button::before {
+    transition: none;
+  }
+}

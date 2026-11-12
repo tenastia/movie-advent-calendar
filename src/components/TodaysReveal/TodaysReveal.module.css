@@ -1,6 +1,6 @@
 .reveal {
   position: relative;
-  width: 638px;
+  width: var(--reveal-width, 638px);
   max-width: 100%;
   aspect-ratio: 638 / 441;
   margin: 0;
