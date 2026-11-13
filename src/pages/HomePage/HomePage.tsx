@@ -1,22 +1,22 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { CalendarTabs } from '../../components/CalendarTabs/CalendarTabs';
 import { CardStack } from '../../components/CardStack/CardStack';
 import { GuessForm } from '../../components/GuessForm/GuessForm';
 import { ProgressTrack } from '../../components/ProgressTrack/ProgressTrack';
 import { SiteHeader } from '../../components/SiteHeader/SiteHeader';
 import { TodaysReveal } from '../../components/TodaysReveal/TodaysReveal';
-import { mockCalendar } from '../../data/mockCalendar';
+import { useCalendars } from '../../data/CalendarsContext';
 import styles from './HomePage.module.css';
 
-type CalendarTab = 'mine' | 'others';
-
 export function HomePage() {
-  const calendar = mockCalendar;
-  const [activeTab, setActiveTab] = useState<CalendarTab>('mine');
+  const { active: calendar } = useCalendars();
+  const navigate = useNavigate();
   const [guesses, setGuesses] = useState<string[]>([]);
 
+  // The first tab is the open calendar; "Other Calendars" opens the Calendars screen.
   const tabs = [
-    { id: 'mine', label: `${calendar.owner}’s Calendar` },
+    { id: 'current', label: calendar.name },
     { id: 'others', label: 'Other Calendars' },
   ] as const;
 
@@ -33,7 +33,13 @@ export function HomePage() {
         <TodaysReveal image={calendar.today.reveal} />
 
         <div className={styles.tabs}>
-          <CalendarTabs options={tabs} value={activeTab} onChange={setActiveTab} />
+          <CalendarTabs
+            options={tabs}
+            value="current"
+            onChange={(id) => {
+              if (id === 'others') navigate('/calendars');
+            }}
+          />
         </div>
 
         <div className={styles.progress}>

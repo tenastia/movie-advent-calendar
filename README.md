@@ -42,10 +42,11 @@ variables (`Colour/Border/nav-border` → `--colour-border-nav-border`), so pref
 
 ## Pages
 
-| Route     | Page                                                                                      |
-| --------- | ----------------------------------------------------------------------------------------- |
-| `/`       | Home: today's reveal, guessing, and a deck of past days to flip through                  |
-| `/create` | Create a calendar: name, length, a movie title per day (calendar or list view), preview |
+| Route        | Page                                                                                      |
+| ------------ | ----------------------------------------------------------------------------------------- |
+| `/`          | Home: today's reveal, guessing, and a deck of past days to flip through                  |
+| `/calendars` | Calendars: pick which calendar the home page shows (opens over the home page)            |
+| `/create`    | Create a calendar: name, length, a movie title per day (calendar or list view), preview |
 
 Routing uses React Router. Netlify serves `index.html` for every path (`public/_redirects`), so deep links work.
 
@@ -57,4 +58,5 @@ Pages run on mock data (`src/data/mockCalendar.ts`) and local state. Not built y
 - Create page: "Share the Calendar" does nothing yet, the preview always shows the sample reveal, and
   the reveal styles (Drifting / Blizzard / Image) can be selected but don't change the preview.
   A draft is lost on reload.
-- The "Calendars" nav link and the "Other Calendars" tab don't have pages yet.
+- Every calendar reuses the one reveal image there is so far, and the calendar you pick is forgotten
+  on reload.

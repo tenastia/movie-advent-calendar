@@ -46,4 +46,8 @@
 
   /* Recurring raw values in the design that aren't Figma variables yet */
   --text-secondary: rgba(255, 255, 255, 0.6);
+
+  /* Layers: overlays sit over the page; the wordmark and side nav stay above them. */
+  --z-overlay: 20;
+  --z-chrome: 30;
 }
