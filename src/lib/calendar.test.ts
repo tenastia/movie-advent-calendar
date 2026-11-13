@@ -1,5 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { getMonthWeeks, moveItem } from './calendar';
+import { getCountdownRange, getMonthWeeks, moveItem } from './calendar';
+
+describe('getCountdownRange', () => {
+  it('always ends on Christmas Eve', () => {
+    expect(getCountdownRange(6)).toEqual({ first: 19, last: 24 });
+    expect(getCountdownRange(12)).toEqual({ first: 13, last: 24 });
+    expect(getCountdownRange(18)).toEqual({ first: 7, last: 24 });
+    expect(getCountdownRange(24)).toEqual({ first: 1, last: 24 });
+  });
+
+  it('clamps out-of-range lengths', () => {
+    expect(getCountdownRange(0)).toEqual({ first: 24, last: 24 });
+    expect(getCountdownRange(40)).toEqual({ first: 1, last: 24 });
+  });
+});
 
 describe('getMonthWeeks', () => {
   it('lays out December 2026 Monday-first, as in the design', () => {

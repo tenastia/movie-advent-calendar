@@ -1,14 +1,15 @@
 import { useEffect, useId, useRef, useState, type DragEvent } from 'react';
 import dragHandle from '../../assets/ui/drag-handle.svg';
+import { getCountdownRange } from '../../lib/calendar';
 import styles from './TitleList.module.css';
 
 interface TitleListProps {
-  /** Number of calendar days (from 1 December). */
+  /** Number of calendar days, counting down to Christmas Eve. */
   days: number;
   /** Movie titles, index 0 = 1 December. */
   titles: readonly string[];
   onChangeTitle: (index: number, title: string) => void;
-  /** Move the title at `from` to day index `to`, shifting the ones in between. */
+  /** Move the title at index `from` to index `to`, shifting the ones in between. */
   onMove: (from: number, to: number) => void;
 }
 
@@ -16,6 +17,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 export function TitleList({ days, titles, onChangeTitle, onMove }: TitleListProps) {
   const hintId = useId();
+  const { first } = getCountdownRange(days);
+  // Drag and focus state below is by row (0 = the first day shown).
   // Rows only become draggable while their handle is pressed, so text in the
   // inputs can still be selected with the mouse.
   const [armed, setArmed] = useState<number | null>(null);
@@ -31,11 +34,11 @@ export function TitleList({ days, titles, onChangeTitle, onMove }: TitleListProp
     focusAfterMove.current = null;
   });
 
-  const move = (from: number, to: number, refocus: boolean) => {
-    if (to < 0 || to >= days || from === to) return;
-    onMove(from, to);
-    if (refocus) focusAfterMove.current = to;
-    setAnnouncement(`Moved to December ${to + 1}`);
+  const move = (fromRow: number, toRow: number, refocus: boolean) => {
+    if (toRow < 0 || toRow >= days || fromRow === toRow) return;
+    onMove(first - 1 + fromRow, first - 1 + toRow);
+    if (refocus) focusAfterMove.current = toRow;
+    setAnnouncement(`Moved to December ${first + toRow}`);
   };
 
   const resetDrag = () => {
@@ -44,44 +47,45 @@ export function TitleList({ days, titles, onChangeTitle, onMove }: TitleListProp
     setDragOver(null);
   };
 
-  const handleDragStart = (event: DragEvent<HTMLLIElement>, index: number) => {
+  const handleDragStart = (event: DragEvent<HTMLLIElement>, row: number) => {
     event.dataTransfer.effectAllowed = 'move';
-    event.dataTransfer.setData('text/plain', String(index));
-    setDragFrom(index);
+    event.dataTransfer.setData('text/plain', String(row));
+    setDragFrom(row);
   };
 
-  const handleDragOver = (event: DragEvent<HTMLLIElement>, index: number) => {
+  const handleDragOver = (event: DragEvent<HTMLLIElement>, row: number) => {
     if (dragFrom === null) return;
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
-    setDragOver(index);
+    setDragOver(row);
   };
 
-  const handleDrop = (event: DragEvent<HTMLLIElement>, index: number) => {
+  const handleDrop = (event: DragEvent<HTMLLIElement>, row: number) => {
     event.preventDefault();
-    if (dragFrom !== null) move(dragFrom, index, false);
+    if (dragFrom !== null) move(dragFrom, row, false);
     resetDrag();
   };
 
   return (
     <div className={styles.wrapper}>
       <ol className={styles.list}>
-        {Array.from({ length: days }, (_, index) => {
-          const day = index + 1;
+        {Array.from({ length: days }, (_, row) => {
+          const day = first + row;
+          const index = day - 1;
           const rowClass = [
             styles.row,
-            dragFrom === index ? styles.dragging : '',
-            dragOver === index && dragFrom !== index ? styles.dropTarget : '',
+            dragFrom === row ? styles.dragging : '',
+            dragOver === row && dragFrom !== row ? styles.dropTarget : '',
           ].join(' ');
 
           return (
             <li
               key={day}
               className={rowClass}
-              draggable={armed === index}
-              onDragStart={(event) => handleDragStart(event, index)}
-              onDragOver={(event) => handleDragOver(event, index)}
-              onDrop={(event) => handleDrop(event, index)}
+              draggable={armed === row}
+              onDragStart={(event) => handleDragStart(event, row)}
+              onDragOver={(event) => handleDragOver(event, row)}
+              onDrop={(event) => handleDrop(event, row)}
               onDragEnd={resetDrag}
             >
               <div className={styles.date} aria-hidden="true">
@@ -99,21 +103,21 @@ export function TitleList({ days, titles, onChangeTitle, onMove }: TitleListProp
               />
               <button
                 ref={(element) => {
-                  handles.current[index] = element;
+                  handles.current[row] = element;
                 }}
                 type="button"
                 className={styles.handle}
                 aria-label={`Reorder December ${day}`}
                 aria-describedby={hintId}
-                onPointerDown={() => setArmed(index)}
+                onPointerDown={() => setArmed(row)}
                 onPointerUp={() => setArmed(null)}
                 onKeyDown={(event) => {
                   if (event.key === 'ArrowUp') {
                     event.preventDefault();
-                    move(index, index - 1, true);
+                    move(row, row - 1, true);
                   } else if (event.key === 'ArrowDown') {
                     event.preventDefault();
-                    move(index, index + 1, true);
+                    move(row, row + 1, true);
                   }
                 }}
               >

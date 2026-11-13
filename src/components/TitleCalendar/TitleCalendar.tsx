@@ -2,7 +2,7 @@ import { useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEven
 import dayCheck from '../../assets/ui/day-check.svg';
 import dayFilled from '../../assets/ui/day-filled.svg';
 import dayRing from '../../assets/ui/day-ring.svg';
-import { getMonthWeeks } from '../../lib/calendar';
+import { getCountdownRange, getMonthWeeks } from '../../lib/calendar';
 import styles from './TitleCalendar.module.css';
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -10,7 +10,7 @@ const DECEMBER = 11;
 
 interface TitleCalendarProps {
   year: number;
-  /** Number of calendar days (from 1 December); later days are shown dimmed. */
+  /** Number of calendar days, counting down to Christmas Eve; earlier days are shown dimmed. */
   days: number;
   /** Movie titles, index 0 = 1 December. */
   titles: readonly string[];
@@ -23,9 +23,10 @@ export function TitleCalendar({ year, days, titles, onChangeTitle }: TitleCalend
   const weeks = useMemo(() => getMonthWeeks(year, DECEMBER), [year]);
   const [selected, setSelected] = useState<number | null>(null);
   const dayButtons = useRef(new Map<number, HTMLButtonElement>());
+  const { first, last } = getCountdownRange(days);
 
   // Close the title field if the selected day falls outside a shortened calendar.
-  const selectedDay = selected !== null && selected <= days ? selected : null;
+  const selectedDay = selected !== null && selected >= first && selected <= last ? selected : null;
   const selectedRow =
     selectedDay === null
       ? -1
@@ -41,7 +42,7 @@ export function TitleCalendar({ year, days, titles, onChangeTitle }: TitleCalend
     if (event.key === 'Enter') {
       event.preventDefault();
       // Save-and-continue: move on to the next day, or finish on the last one.
-      if (selectedDay < days) setSelected(selectedDay + 1);
+      if (selectedDay < last) setSelected(selectedDay + 1);
       else closeAndFocus(selectedDay);
     } else if (event.key === 'Escape') {
       event.preventDefault();
@@ -64,7 +65,7 @@ export function TitleCalendar({ year, days, titles, onChangeTitle }: TitleCalend
       <div className={styles.grid} role="group" aria-labelledby={monthId}>
         {weeks.flat().map((cell) => {
           const key = cell.date.toISOString();
-          if (!cell.inMonth || cell.day > days) {
+          if (!cell.inMonth || cell.day < first || cell.day > last) {
             return (
               <span key={key} className={`${styles.cell} ${styles.muted}`} aria-hidden="true">
                 {cell.day}

@@ -30,6 +30,18 @@ export function getMonthWeeks(year: number, monthIndex: number): CalendarCell[][
   return weeks;
 }
 
+/** Every calendar counts down to Christmas, so its last day is always Christmas Eve. */
+export const COUNTDOWN_LAST_DAY = 24;
+
+/**
+ * The December days a calendar of `length` days covers: the run of days that
+ * ends on Christmas Eve (e.g. 6 days → 19–24 December).
+ */
+export function getCountdownRange(length: number): { first: number; last: number } {
+  const days = Math.min(Math.max(Math.round(length), 1), COUNTDOWN_LAST_DAY);
+  return { first: COUNTDOWN_LAST_DAY - days + 1, last: COUNTDOWN_LAST_DAY };
+}
+
 /** Returns a copy of `items` with the element at `from` moved to index `to`. */
 export function moveItem<T>(items: readonly T[], from: number, to: number): T[] {
   const next = items.slice();
