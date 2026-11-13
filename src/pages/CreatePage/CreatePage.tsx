@@ -45,7 +45,7 @@ export function CreatePage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <SiteHeader revealTime={mockCalendar.revealTime} />
+        <SiteHeader />
       </div>
 
       <main className={styles.content}>

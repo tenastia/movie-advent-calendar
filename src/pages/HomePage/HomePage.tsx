@@ -25,7 +25,7 @@ export function HomePage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <SiteHeader revealTime={calendar.revealTime} />
+        <SiteHeader />
       </div>
 
       <main className={styles.main}>

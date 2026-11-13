@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatCountdown, getNextRevealAt, toIsoDuration } from './countdown';
+import { formatCountdown, getChristmasTarget, toIsoDuration } from './countdown';
 
 describe('formatCountdown', () => {
   it('formats days, hours, minutes and seconds as zero-padded pairs', () => {
@@ -26,19 +26,32 @@ describe('toIsoDuration', () => {
   });
 });
 
-describe('getNextRevealAt', () => {
-  it('returns today when the reveal time is still ahead', () => {
-    const now = new Date(2026, 11, 9, 10, 30);
-    expect(getNextRevealAt(now, '19:00')).toEqual(new Date(2026, 11, 9, 19, 0));
+describe('getChristmasTarget', () => {
+  const christmas2026 = new Date(2026, 11, 25);
+
+  it('targets this year’s Christmas before it arrives', () => {
+    expect(getChristmasTarget(new Date(2026, 10, 13, 9, 30))).toEqual(christmas2026);
+    expect(getChristmasTarget(new Date(2026, 0, 1))).toEqual(christmas2026);
   });
 
-  it('rolls over to tomorrow once the reveal time has passed', () => {
-    const now = new Date(2026, 11, 9, 19, 0);
-    expect(getNextRevealAt(now, '19:00')).toEqual(new Date(2026, 11, 10, 19, 0));
+  it('counts down to the very last second of Christmas Eve', () => {
+    const now = new Date(2026, 11, 24, 23, 59, 59);
+    expect(getChristmasTarget(now)).toEqual(christmas2026);
+    expect(formatCountdown(getChristmasTarget(now).getTime() - now.getTime())).toBe('00 : 00 : 00 : 01');
   });
 
-  it('rolls over across month boundaries', () => {
-    const now = new Date(2026, 10, 30, 20, 0);
-    expect(getNextRevealAt(now, '19:00')).toEqual(new Date(2026, 11, 1, 19, 0));
+  it('rests at zero throughout Christmas Day', () => {
+    const now = new Date(2026, 11, 25, 18, 0);
+    expect(getChristmasTarget(now)).toEqual(christmas2026);
+    expect(formatCountdown(getChristmasTarget(now).getTime() - now.getTime())).toBe('00 : 00 : 00 : 00');
+  });
+
+  it('moves on to next year’s Christmas from 26 December', () => {
+    expect(getChristmasTarget(new Date(2026, 11, 26))).toEqual(new Date(2027, 11, 25));
+  });
+
+  it('shows the full day count from mid-November', () => {
+    const now = new Date(2026, 10, 13, 12, 0, 0);
+    expect(formatCountdown(getChristmasTarget(now).getTime() - now.getTime())).toBe('41 : 12 : 00 : 00');
   });
 });

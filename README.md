@@ -54,7 +54,6 @@ Routing uses React Router. Netlify serves `index.html` for every path (`public/_
 Pages run on mock data (`src/data/mockCalendar.ts`) and local state. Not built yet:
 
 - Guesses only count down the remaining attempts. Nothing checks them against an answer yet.
-- The countdown shows the time until the next daily reveal at 19:00 local time.
 - Create page: "Share the Calendar" does nothing yet, the preview always shows the sample reveal, and
   the reveal styles (Drifting / Blizzard / Image) can be selected but don't change the preview.
   A draft is lost on reload.
