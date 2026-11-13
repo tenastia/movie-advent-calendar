@@ -44,7 +44,7 @@ variables (`Colour/Border/nav-border` → `--colour-border-nav-border`), so pref
 
 | Route     | Page                                                                                      |
 | --------- | ----------------------------------------------------------------------------------------- |
-| `/`       | Home: today's reveal, guessing, and the pile of recent days                               |
+| `/`       | Home: today's reveal, guessing, and a deck of past days to flip through                  |
 | `/create` | Create a calendar: name, length, a movie title per day (calendar or list view), preview |
 
 Routing uses React Router. Netlify serves `index.html` for every path (`public/_redirects`), so deep links work.

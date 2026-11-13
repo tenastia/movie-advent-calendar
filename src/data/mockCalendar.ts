@@ -22,6 +22,11 @@ export const mockCalendar: Calendar = {
     { day: 1, title: 'The secret life of Walter Mitty', status: 'guessed' },
     { day: 2, title: 'Klaus', status: 'missed' },
     { day: 3, title: 'The grand Budapest hotel', status: 'guessed' },
+    { day: 4, title: 'Elf', status: 'guessed' },
+    { day: 5, title: 'Home Alone', status: 'guessed' },
+    { day: 6, title: 'Love Actually', status: 'missed' },
+    { day: 7, title: 'The Holiday', status: 'guessed' },
+    { day: 8, title: 'It’s a Wonderful Life', status: 'missed' },
     { day: 9, title: 'The secret life of Walter Mitty', status: 'guessed' },
   ],
 };

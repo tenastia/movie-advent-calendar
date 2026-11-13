@@ -12,23 +12,79 @@
   position: relative;
   width: 100%;
   height: 100%;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+}
+
+/* Each card sits at its slot via --x / --y / --rotate (set inline). */
+.item,
+.next {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 167px;
+  height: 168px;
+  border-radius: var(--border-radius-card-small);
+  transform: translate(var(--x), calc(var(--y) + var(--lift, 0px))) rotate(var(--rotate));
 }
 
 .item {
-  position: absolute;
-  top: var(--y);
-  left: var(--x);
-  transform: rotate(var(--rotate));
+  transition:
+    transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 320ms ease,
+    box-shadow 200ms ease;
+}
+
+/* Lifting off the top of the deck, before dropping in behind it. */
+.tossing {
+  transition:
+    transform 220ms cubic-bezier(0.3, 0.6, 0.4, 1),
+    box-shadow 220ms ease;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.55);
+}
+
+/* Invisible button over the front card: the click / tap / keyboard target. */
+.next {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Keyboard focus lifts the ring with the card. (Hover keeps the target still, so it can't jitter.) */
+.next:focus-visible {
+  --lift: -8px;
+  outline: 2px solid var(--colour-border-input-focus);
+  outline-offset: 4px;
+}
+
+/* Hovering (or focusing) the deck slightly raises the front card. */
+@media (hover: hover) {
+  .pile:has(.next:hover) .front {
+    --lift: -8px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.pile:has(.next:focus-visible) .front {
+  --lift: -8px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.5);
 }
 
 /* Below the width where the pile fits beside the reveal, drop it under the form. */
 @media (max-width: 1279px) {
   .stack {
-    position: static;
+    position: relative;
+    top: auto;
+    left: auto;
     margin-top: 56px;
     transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item,
+  .tossing {
+    transition: opacity 150ms ease;
   }
 }
