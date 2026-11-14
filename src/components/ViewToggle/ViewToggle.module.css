@@ -1,12 +1,15 @@
 .toggle {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .button {
   position: relative;
-  display: block;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
   margin: 0;
   padding: 0;
   background: none;
@@ -20,13 +23,10 @@
   display: block;
 }
 
-/* Selection circle: the 24px, 5%-white ellipse from the Figma icon export. */
+/* Selection circle: the 5%-white ellipse from the Figma icon export, filling the 26px button. */
 .button::before {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 24px;
-  height: 24px;
+  inset: 0;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.05);
   opacity: 0;

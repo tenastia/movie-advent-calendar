@@ -9,6 +9,8 @@ interface SegmentedControlProps<T extends string | number> {
   labelledBy?: string;
   /** Accessible name when there is no visible label. */
   label?: string;
+  /** Stretch to the container's width, splitting it into equal segments. */
+  fill?: boolean;
 }
 
 /** Figma `SegmentedButton` row, built on native radio inputs (arrow keys, form semantics). */
@@ -18,11 +20,17 @@ export function SegmentedControl<T extends string | number>({
   onChange,
   labelledBy,
   label,
+  fill = false,
 }: SegmentedControlProps<T>) {
   const name = useId();
 
   return (
-    <div className={styles.group} role="radiogroup" aria-labelledby={labelledBy} aria-label={label}>
+    <div
+      className={`${styles.group} ${fill ? styles.fill : ''}`}
+      role="radiogroup"
+      aria-labelledby={labelledBy}
+      aria-label={label}
+    >
       {options.map((option) => {
         const checked = option.value === value;
         return (

@@ -18,7 +18,7 @@ export function ListNameField({ id, value, onChange }: ListNameFieldProps) {
         id={id}
         className={styles.input}
         type="text"
-        placeholder="List name"
+        placeholder="e.g. Winter movies for Ana"
         autoComplete="off"
         maxLength={60}
         value={value}

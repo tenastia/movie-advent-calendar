@@ -28,7 +28,6 @@ export function ViewToggle({ value, onChange }: ViewToggleProps) {
           key={view.id}
           type="button"
           className={styles.button}
-          style={{ width: view.w, height: view.h }}
           aria-label={view.label}
           aria-pressed={value === view.id}
           onClick={() => onChange(view.id)}

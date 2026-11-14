@@ -10,11 +10,11 @@
   min-height: 100vh;
   min-height: 100dvh;
   /* Side padding keeps the panels clear of the fixed nav rail. */
-  padding: 20.5px 84px 65px;
+  padding: 20.5px 84px 74.5px;
 }
 
 .header {
-  margin-bottom: 21.5px;
+  margin-bottom: 31px;
 }
 
 .content {
@@ -41,25 +41,21 @@
 
 .intro {
   margin: 0;
-  color: var(--text-secondary);
-  font-weight: var(--font-weight-regular);
-  font-size: 16px;
-  line-height: 24px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: var(--font-weight-light);
+  font-size: 20px;
+  line-height: 28px;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 12px;
 }
 
-.nameField {
-  margin-top: 30px;
-}
-
+.nameField,
 .daysField {
-  margin-top: 35px;
+  margin-top: 24px;
 }
 
 .label {
@@ -74,14 +70,14 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 48px;
+  margin-top: 36px;
 }
 
 .titlesHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 24px;
+  height: 26px;
 }
 
 /* Stack the panels once they no longer fit side by side. */

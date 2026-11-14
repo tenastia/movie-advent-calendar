@@ -24,6 +24,15 @@
   transition: background-color 120ms ease-out;
 }
 
+.fill {
+  width: 100%;
+}
+
+.fill .option {
+  flex: 1 1 0;
+  width: auto;
+}
+
 /* Adjacent segments share a border. */
 .option + .option {
   margin-left: -1px;

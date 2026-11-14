@@ -20,30 +20,29 @@ interface PreviewPanelProps {
 }
 
 export function PreviewPanel({ image, revealStyle, onRevealStyleChange, onShare }: PreviewPanelProps) {
-  const headingId = useId();
+  const styleLabelId = useId();
 
   return (
-    <section className={styles.panel} aria-labelledby={headingId}>
+    <section className={styles.panel} aria-label="Preview">
       <div className={styles.header}>
-        <h2 id={headingId} className={styles.heading}>
-          Preview
-        </h2>
-        <SegmentedControl
-          label="Reveal style"
-          options={REVEAL_STYLES}
-          value={revealStyle}
-          onChange={onRevealStyleChange}
-        />
+        <div className={styles.picker}>
+          <p id={styleLabelId} className={styles.label}>
+            Select reveal style
+          </p>
+          <SegmentedControl
+            labelledBy={styleLabelId}
+            options={REVEAL_STYLES}
+            value={revealStyle}
+            onChange={onRevealStyleChange}
+          />
+        </div>
+        <button type="button" className={styles.share} onClick={onShare}>
+          Share the Calendar
+        </button>
       </div>
 
       <div className={styles.stage}>
         <TodaysReveal image={image} width={233} />
-      </div>
-
-      <div className={styles.actions}>
-        <button type="button" className={styles.share} onClick={onShare}>
-          Share the Calendar
-        </button>
       </div>
     </section>
   );

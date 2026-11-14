@@ -53,26 +53,28 @@ export function CreatePage() {
           <h2 id={headingId} className="visually-hidden">
             Create a calendar
           </h2>
-          <p className={styles.intro}>Create a movie list for a friend and let them guess movies in it</p>
+          <p className={styles.intro}>
+            Hide a movie behind each day. Your friend opens one a day and guesses the title.
+          </p>
 
           <div className={`${styles.field} ${styles.nameField}`}>
             <label htmlFor={nameId} className={styles.label}>
-              Name your list
+              Calendar Name
             </label>
             <ListNameField id={nameId} value={name} onChange={setName} />
           </div>
 
           <div className={`${styles.field} ${styles.daysField}`}>
             <p id={daysLabelId} className={styles.label}>
-              For how many days
+              Days
             </p>
-            <SegmentedControl labelledBy={daysLabelId} options={DURATIONS} value={days} onChange={setDays} />
+            <SegmentedControl fill labelledBy={daysLabelId} options={DURATIONS} value={days} onChange={setDays} />
           </div>
 
           <div className={styles.titles}>
             <div className={styles.titlesHeader}>
               <p id={titlesLabelId} className={styles.label}>
-                Add movie titles to each day
+                Pick a day to add its movie
               </p>
               <ViewToggle value={view} onChange={setView} />
             </div>
