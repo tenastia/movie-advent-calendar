@@ -1,0 +1,2 @@
+# Netlify: serve the app for every path so deep links like /create work.
+/*  /index.html  200

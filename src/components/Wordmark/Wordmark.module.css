@@ -1,4 +1,7 @@
 .wordmark {
+  position: relative;
+  /* Stays crisp above overlays such as the Calendars screen. */
+  z-index: var(--z-chrome);
   display: flex;
   align-items: baseline;
   gap: 16.162px;

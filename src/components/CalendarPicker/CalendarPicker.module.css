@@ -1,0 +1,32 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  overflow-y: auto;
+  background: rgba(17, 17, 17, 0.9);
+  -webkit-backdrop-filter: blur(5.15px);
+  backdrop-filter: blur(5.15px);
+  animation: fade-in 200ms ease-out backwards;
+  outline: none;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  /* The row starts 249px down an 880px-tall frame; keep that offset from the centre. */
+  padding: max(130px, calc(50vh - 191px)) 84px 48px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    animation: none;
+  }
+}

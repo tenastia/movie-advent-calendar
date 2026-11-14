@@ -1,0 +1,83 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+  padding: 32px 24px;
+  background: var(--colour-background-card-background);
+  border-radius: var(--border-radius-section);
+}
+
+/* Reveal-style picker on the left; Share lines up with its bottom edge on the right. */
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.label {
+  margin: 0;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-light);
+  font-size: 14px;
+  line-height: 17px;
+}
+
+/* Fills the rest of the panel. */
+.stage {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  overflow: hidden;
+  background: rgba(217, 217, 217, 0.05);
+  border-radius: 16px;
+}
+
+.share {
+  flex: none;
+  width: 225px;
+  height: 44px;
+  margin: 0;
+  padding: 8px 16px;
+  background: #d1d1d1;
+  border: 1px solid #d1d1d1;
+  border-radius: 46px;
+  /* Soft white glow, as in the design. */
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.65);
+  color: #111;
+  font-weight: var(--font-weight-regular);
+  font-size: 14px;
+  line-height: 17px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease-out,
+    border-color 120ms ease-out,
+    box-shadow 120ms ease-out;
+}
+
+.share:hover {
+  background: #e6e6e6;
+  border-color: #e6e6e6;
+  box-shadow: 0 0 22px rgba(255, 255, 255, 0.8);
+}
+
+.share:focus-visible {
+  outline: 2px solid var(--colour-border-input-focus);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .share {
+    transition: none;
+  }
+}

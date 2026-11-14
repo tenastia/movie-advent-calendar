@@ -1,0 +1,122 @@
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* 15px + 1px border = the design's 16px inset. */
+  padding: 15px;
+  background: #1b1b1b;
+  border: 1px solid var(--colour-border-card-border);
+  border-radius: var(--border-radius-card-small);
+}
+
+.month {
+  margin: 0;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-light);
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.weekdays,
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 41px);
+  column-gap: 8px;
+  justify-content: center;
+}
+
+.weekdays {
+  color: rgba(255, 255, 255, 0.4);
+  opacity: 0.4;
+  font-weight: var(--font-weight-light);
+  font-size: 11px;
+  line-height: 13px;
+}
+
+.weekdays span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+}
+
+.grid {
+  position: relative;
+  grid-auto-rows: 32px;
+  row-gap: 8px;
+}
+
+.cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 41px;
+  height: 32px;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: var(--font-weight-light);
+  font-size: 13px;
+  line-height: 16px;
+}
+
+/* Days outside December, or beyond the chosen number of days. */
+.muted {
+  opacity: 0.4;
+}
+
+.day {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.day:hover .number {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.day:focus-visible {
+  outline: 2px solid var(--colour-border-input-focus);
+  outline-offset: -2px;
+}
+
+.number,
+.check {
+  position: relative;
+}
+
+/* Selection ring / filled disc, centred half a pixel low as in Figma. */
+.marker {
+  position: absolute;
+  top: calc(50% + 0.5px);
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Title field that opens under the selected day's week (Figma InputField). */
+.titleInput {
+  position: absolute;
+  top: calc(var(--row) * 40px + 37px);
+  left: 50%;
+  z-index: 1;
+  width: 340px;
+  height: 44px;
+  margin: 0;
+  padding: 8px 36px 8px 16px;
+  transform: translateX(-50%);
+  background: #1f1f1f;
+  border: 1px solid var(--colour-border-input-action);
+  border-radius: var(--border-radius-input-field);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: var(--font-weight-light);
+  font-size: 14px;
+  line-height: 17px;
+  outline: none;
+}
+
+.titleInput::placeholder {
+  color: var(--colour-typography-input-text);
+  opacity: 1;
+}

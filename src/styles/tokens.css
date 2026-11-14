@@ -28,6 +28,7 @@
 
   /* Border radius */
   --border-radius-nav: 18px;
+  --border-radius-section: 14px;
   --border-radius-input-field: 14px;
   --border-radius-card-small: 8px;
   --border-radius-label-small: 3px;
@@ -35,8 +36,18 @@
   /* Typography (not Figma variables; from the text styles used in the design) */
   --font-sans: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', 'Helvetica Neue', Arial,
     sans-serif;
+  --font-inter: 'Inter', var(--font-sans);
   --font-script: 'Monsieur La Doulaise', cursive;
   --font-weight-thin: 100;
   --font-weight-light: 300;
   --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* Recurring raw values in the design that aren't Figma variables yet */
+  --text-secondary: rgba(255, 255, 255, 0.6);
+
+  /* Layers: overlays sit over the page; the wordmark and side nav stay above them. */
+  --z-overlay: 20;
+  --z-chrome: 30;
 }
