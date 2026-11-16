@@ -13,15 +13,16 @@ export function CalendarPicker() {
   const { calendars, active, setActiveId } = useCalendars();
   const navigate = useNavigate();
   const headingId = useId();
-  const dialogRef = useRef<HTMLDivElement>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
   // Whatever opened the screen (the "Other Calendars" tab or the nav icon) still
   // has focus during the first render; focus goes back there on close.
   const [opener] = useState(() => document.activeElement as HTMLElement | null);
   const [restore] = useState(() => ({ focus: false }));
 
-  // Focus the dialog itself (no visible ring); Tab then moves to the first card.
+  // Focus the scrolling area (no visible ring): arrow keys and Page Down scroll
+  // the cards, and Tab moves to the first one.
   useEffect(() => {
-    dialogRef.current?.focus({ preventScroll: true });
+    scrollerRef.current?.focus({ preventScroll: true });
   }, []);
 
   // Runs when this screen unmounts, by which point the home page is no longer inert.
@@ -51,11 +52,9 @@ export function CalendarPicker() {
     // The home page behind is made inert while this is open (see App), so the
     // dialog and the side nav are what remain reachable.
     <div
-      ref={dialogRef}
       className={styles.overlay}
       role="dialog"
       aria-labelledby={headingId}
-      tabIndex={-1}
       onClick={(event) => {
         if (!(event.target as Element).closest('article')) close();
       }}
@@ -63,20 +62,23 @@ export function CalendarPicker() {
       <h2 id={headingId} className="visually-hidden">
         Calendars
       </h2>
-      <div className={styles.cards}>
-        {calendars.map((calendar, index) => (
-          <CalendarCard
-            key={calendar.id}
-            calendar={calendar}
-            index={index}
-            isActive={calendar.id === active.id}
-            onOpen={() => {
-              setActiveId(calendar.id);
-              navigate('/');
-            }}
-          />
-        ))}
-        <CreateListCard index={calendars.length} onCreate={() => navigate('/create')} />
+      {/* The cards scroll here; the logo and side nav stay where they are. */}
+      <div ref={scrollerRef} className={styles.scroller} tabIndex={-1}>
+        <div className={styles.cards}>
+          {calendars.map((calendar, index) => (
+            <CalendarCard
+              key={calendar.id}
+              calendar={calendar}
+              index={index}
+              isActive={calendar.id === active.id}
+              onOpen={() => {
+                setActiveId(calendar.id);
+                navigate('/');
+              }}
+            />
+          ))}
+          <CreateListCard index={calendars.length} onCreate={() => navigate('/create')} />
+        </div>
       </div>
     </div>
   );
