@@ -7,7 +7,6 @@ import { TitleCalendar } from '../../components/TitleCalendar/TitleCalendar';
 import { TitleList } from '../../components/TitleList/TitleList';
 import { ViewToggle, type TitlesView } from '../../components/ViewToggle/ViewToggle';
 import { mockCalendar } from '../../data/mockCalendar';
-import { moveItem } from '../../lib/calendar';
 import styles from './CreatePage.module.css';
 
 const MAX_DAYS = 24;
@@ -86,7 +85,6 @@ export function CreatePage() {
                 days={days}
                 titles={titles}
                 onChangeTitle={setTitle}
-                onMove={(from, to) => setTitles((previous) => moveItem(previous, from, to))}
               />
             )}
           </div>

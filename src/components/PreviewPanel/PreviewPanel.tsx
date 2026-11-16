@@ -27,7 +27,7 @@ export function PreviewPanel({ image, revealStyle, onRevealStyleChange, onShare 
       <div className={styles.header}>
         <div className={styles.picker}>
           <p id={styleLabelId} className={styles.label}>
-            Select reveal style
+            Select Reveal Style
           </p>
           <SegmentedControl
             labelledBy={styleLabelId}

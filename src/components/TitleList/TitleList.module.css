@@ -2,13 +2,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 23px;
+  /* The list view sits 20px from the panel's bottom edge, 4px closer than the calendar view. */
+  margin-bottom: -4px;
 }
 
 .list {
   width: 100%;
-  /* Sized so the panel matches the calendar view's height; the rest scrolls. */
-  height: 248px;
+  /* Exactly four rows (63px apart, plus the last row's bottom divider); the rest scrolls. */
+  height: 253px;
   margin: 0;
   padding: 0;
   overflow-y: auto;
@@ -36,26 +38,19 @@
   background: rgba(255, 255, 255, 0.02);
 }
 
-.dragging {
-  opacity: 0.4;
-}
-
-.dropTarget {
-  background: rgba(255, 255, 255, 0.05);
-}
-
 .date {
   display: flex;
   flex: none;
   flex-direction: column;
   align-items: center;
+  width: 40px;
   color: var(--text-secondary);
   font-weight: var(--font-weight-semibold);
 }
 
 .dayNumber {
-  width: 46px;
-  font-size: 36px;
+  width: 100%;
+  font-size: 32px;
   line-height: 36px;
 }
 
@@ -84,43 +79,6 @@
 .input::placeholder {
   color: var(--colour-typography-input-text);
   opacity: 1;
-}
-
-.handle {
-  position: relative;
-  flex: none;
-  width: 16px;
-  height: 8px;
-  margin: 0;
-  padding: 0;
-  background: none;
-  border: 0;
-  cursor: grab;
-  touch-action: none;
-}
-
-/* Larger hit area than the 16×8 glyph. */
-.handle::before {
-  position: absolute;
-  inset: -14px -10px;
-  content: '';
-}
-
-/* The exported SVG carries half a pixel of stroke on each side. */
-.handle img {
-  position: absolute;
-  top: -0.5px;
-  left: -0.5px;
-}
-
-.handle:active {
-  cursor: grabbing;
-}
-
-.handle:focus-visible {
-  border-radius: 2px;
-  outline: 2px solid var(--colour-border-input-focus);
-  outline-offset: 4px;
 }
 
 .scrollHint {
