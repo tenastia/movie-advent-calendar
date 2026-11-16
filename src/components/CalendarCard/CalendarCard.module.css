@@ -33,10 +33,13 @@
 
 .name,
 .description,
-.count {
+.count,
+.showing {
   margin: 0;
   color: rgba(255, 255, 255, 0.3);
-  transition: color 200ms ease-out;
+  transition:
+    color 200ms ease-out,
+    border-color 200ms ease-out;
 }
 
 .name {
@@ -63,6 +66,38 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+}
+
+.footerEnd {
+  justify-content: flex-end;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+/* "Currently Showing" pill on the calendar open on the home page. */
+.showing {
+  padding: 0 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  font-weight: var(--font-weight-light);
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+/* "Create Your List" (Figma Variant2): no fill, 2px border, soft shadow. */
+.create {
+  /* 22px + 2px border = the design's 24px inset. */
+  padding: 22px;
+  background: transparent;
+  border: 2px solid var(--colour-border-card-border);
+  box-shadow: 0 1px 20px 0 var(--colour-border-nav-border);
+  filter: none;
 }
 
 .count {
@@ -103,8 +138,12 @@
   outline-offset: 4px;
 }
 
-.card:has(.open:focus-visible) :is(.name, .description, .count) {
+.card:has(.open:focus-visible) :is(.name, .description, .count, .showing) {
   color: rgba(255, 255, 255, 0.6);
+}
+
+.card:has(.open:focus-visible) .showing {
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 @media (hover: hover) {
@@ -113,8 +152,16 @@
     border-color: var(--colour-border-card-border);
   }
 
-  .card:hover :is(.name, .description, .count) {
+  .card:hover :is(.name, .description, .count, .showing) {
     color: rgba(255, 255, 255, 0.6);
+  }
+
+  .card:hover .showing {
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .create:hover {
+    border-color: #3a3a3a;
   }
 
   .card:hover .open {

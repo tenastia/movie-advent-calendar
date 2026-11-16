@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useCalendars } from '../../data/CalendarsContext';
-import { CalendarCard } from '../CalendarCard/CalendarCard';
+import { CalendarCard, CreateListCard } from '../CalendarCard/CalendarCard';
 import styles from './CalendarPicker.module.css';
 
 /**
@@ -76,6 +76,7 @@ export function CalendarPicker() {
             }}
           />
         ))}
+        <CreateListCard index={calendars.length} onCreate={() => navigate('/create')} />
       </div>
     </div>
   );
