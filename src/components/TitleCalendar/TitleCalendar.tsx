@@ -17,11 +17,19 @@ interface TitleCalendarProps {
   onChangeTitle: (index: number, title: string) => void;
 }
 
+/** Tooltips on the outer columns anchor to that side so long titles stay inside the panel. */
+const tooltipAlign = (column: number) =>
+  column <= 1 ? styles.tooltipStart : column >= 5 ? styles.tooltipEnd : '';
+
 export function TitleCalendar({ year, days, titles, onChangeTitle }: TitleCalendarProps) {
   const monthId = useId();
   const inputId = useId();
   const weeks = useMemo(() => getMonthWeeks(year, DECEMBER), [year]);
   const [selected, setSelected] = useState<number | null>(null);
+  // What's being typed. It only becomes the day's title (and marks the day as
+  // done) on Enter or when focus leaves the field; Escape discards it.
+  const [draft, setDraft] = useState('');
+  const discardOnBlur = useRef(false);
   const dayButtons = useRef(new Map<number, HTMLButtonElement>());
   const { first, last } = getCountdownRange(days);
 
@@ -32,22 +40,39 @@ export function TitleCalendar({ year, days, titles, onChangeTitle }: TitleCalend
       ? -1
       : weeks.findIndex((week) => week.some((cell) => cell.inMonth && cell.day === selectedDay));
 
+  const open = (day: number) => {
+    setSelected(day);
+    setDraft(titles[day - 1] ?? '');
+  };
+
+  const commit = (day: number) => onChangeTitle(day - 1, draft.trim());
+
+  /** Close the field and return focus to its day, without saving again on blur. */
   const closeAndFocus = (day: number) => {
+    discardOnBlur.current = true;
     setSelected(null);
     dayButtons.current.get(day)?.focus();
   };
 
   const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (selectedDay === null) return;
+    if (selectedDay === null || event.nativeEvent.isComposing) return;
     if (event.key === 'Enter') {
       event.preventDefault();
+      commit(selectedDay);
       // Save-and-continue: move on to the next day, or finish on the last one.
-      if (selectedDay < last) setSelected(selectedDay + 1);
+      if (selectedDay < last) open(selectedDay + 1);
       else closeAndFocus(selectedDay);
     } else if (event.key === 'Escape') {
       event.preventDefault();
       closeAndFocus(selectedDay);
     }
+  };
+
+  const handleInputBlur = () => {
+    // Clicking or tabbing anywhere else saves what was typed.
+    if (selectedDay !== null && !discardOnBlur.current) commit(selectedDay);
+    discardOnBlur.current = false;
+    setSelected(null);
   };
 
   return (
@@ -63,7 +88,7 @@ export function TitleCalendar({ year, days, titles, onChangeTitle }: TitleCalend
       </div>
 
       <div className={styles.grid} role="group" aria-labelledby={monthId}>
-        {weeks.flat().map((cell) => {
+        {weeks.flat().map((cell, index) => {
           const key = cell.date.toISOString();
           if (!cell.inMonth || cell.day < first || cell.day > last) {
             return (
@@ -89,12 +114,18 @@ export function TitleCalendar({ year, days, titles, onChangeTitle }: TitleCalend
               aria-label={`December ${cell.day}: ${filled ? title : 'no movie yet'}`}
               aria-expanded={isSelected}
               aria-controls={isSelected ? inputId : undefined}
-              onClick={() => setSelected(cell.day)}
+              onClick={() => open(cell.day)}
             >
               {filled ? (
                 <>
                   <img className={styles.marker} src={dayFilled} width={25} height={25} alt="" />
                   <img className={styles.check} src={dayCheck} width={11.5} height={8.5} alt="" />
+                  {!isSelected && (
+                    // The title is already in the button's accessible name.
+                    <span className={`${styles.tooltip} ${tooltipAlign(index % 7)}`} aria-hidden="true">
+                      {title}
+                    </span>
+                  )}
                 </>
               ) : (
                 <>
@@ -117,11 +148,12 @@ export function TitleCalendar({ year, days, titles, onChangeTitle }: TitleCalend
             placeholder="Enter Movie Title"
             aria-label={`Movie title for December ${selectedDay}`}
             autoComplete="off"
+            enterKeyHint={selectedDay < last ? 'next' : 'done'}
             autoFocus
-            value={titles[selectedDay - 1] ?? ''}
-            onChange={(event) => onChangeTitle(selectedDay - 1, event.target.value)}
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
             onKeyDown={handleInputKeyDown}
-            onBlur={() => setSelected(null)}
+            onBlur={handleInputBlur}
           />
         )}
       </div>

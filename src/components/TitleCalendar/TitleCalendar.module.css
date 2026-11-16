@@ -89,6 +89,58 @@
   position: relative;
 }
 
+/* Movie title shown above a done day on hover or keyboard focus. */
+.tooltip {
+  --tooltip-x: -50%;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  z-index: 2;
+  max-width: 220px;
+  padding: 6px 10px;
+  overflow: hidden;
+  background: var(--colour-background-background);
+  border: 1px solid var(--colour-border-card-border);
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: var(--font-weight-regular);
+  font-size: 12px;
+  line-height: 15px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transform: translate(var(--tooltip-x), 4px);
+  pointer-events: none;
+  transition:
+    opacity 120ms ease-out,
+    transform 120ms ease-out;
+}
+
+.tooltipStart {
+  --tooltip-x: 0;
+  left: 0;
+}
+
+.tooltipEnd {
+  --tooltip-x: 0;
+  right: 0;
+  left: auto;
+}
+
+.day:hover .tooltip,
+.day:focus-visible .tooltip {
+  opacity: 1;
+  transform: translate(var(--tooltip-x), 0);
+  transition-delay: 80ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip {
+    transition: opacity 120ms ease-out;
+  }
+}
+
 /* Selection ring / filled disc, centred half a pixel low as in Figma. */
 .marker {
   position: absolute;
