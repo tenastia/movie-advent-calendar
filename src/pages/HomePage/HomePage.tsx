@@ -23,36 +23,41 @@ export function HomePage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <SiteHeader />
+      {/* Header to guess field: exactly one screen tall. */}
+      <div className={styles.screen}>
+        <div className={styles.header}>
+          <SiteHeader />
+        </div>
+
+        <main className={styles.main}>
+          <h2 className="visually-hidden">Today’s reveal</h2>
+          <div className={styles.reveal}>
+            <TodaysReveal
+              day={calendar.today.day}
+              title={calendar.today.title}
+              nextTitle={calendar.today.nextTitle}
+              image={calendar.today.reveal}
+            />
+          </div>
+
+          <div className={styles.tabs}>
+            <CalendarTabs
+              options={tabs}
+              value="current"
+              onChange={(id) => {
+                if (id === 'others') navigate('/calendars');
+              }}
+            />
+          </div>
+
+          <div className={styles.guess}>
+            <GuessForm
+              remainingAttempts={remainingAttempts}
+              onGuess={(guess) => setGuesses((previous) => [...previous, guess])}
+            />
+          </div>
+        </main>
       </div>
-
-      <main className={styles.main}>
-        <h2 className="visually-hidden">Today’s reveal</h2>
-        <TodaysReveal
-          day={calendar.today.day}
-          title={calendar.today.title}
-          nextTitle={calendar.today.nextTitle}
-          image={calendar.today.reveal}
-        />
-
-        <div className={styles.tabs}>
-          <CalendarTabs
-            options={tabs}
-            value="current"
-            onChange={(id) => {
-              if (id === 'others') navigate('/calendars');
-            }}
-          />
-        </div>
-
-        <div className={styles.guess}>
-          <GuessForm
-            remainingAttempts={remainingAttempts}
-            onGuess={(guess) => setGuesses((previous) => [...previous, guess])}
-          />
-        </div>
-      </main>
 
       <CardStack days={calendar.days} today={calendar.today.day} />
     </div>
