@@ -1,19 +1,22 @@
 import { useEffect, useId, useMemo, useRef, useState, type CSSProperties } from 'react';
 import type { CalendarDay } from '../../data/types';
 import { moveItem } from '../../lib/calendar';
+import { formatRevealTime, REVEAL_AT, useIsRevealed } from '../../motion/reveal';
 import { CalCard } from '../CalCard/CalCard';
+import { TodayCard } from '../TodayCard/TodayCard';
 import styles from './CardStack.module.css';
 
 /**
  * Position (top-left of the unrotated 167×168 card) and rotation of each
  * visible card, from the back of the pile to the front, as in the Figma
- * "Frame 47" layout. Further cards wait, hidden, in the back position.
+ * "Frame 47" layout (the front slot is where today's card sits). Further cards
+ * wait, hidden, in the back position.
  */
 const PILE_LAYOUT = [
   { x: 9, y: 4.88, rotate: -3.45 },
   { x: 12.91, y: 16.76, rotate: 3.45 },
   { x: 5.46, y: 27.3, rotate: -3.85 },
-  { x: 16, y: 32.88, rotate: 3.75 },
+  { x: 16.32, y: 29.28, rotate: 4.22 },
 ] as const;
 const VISIBLE = PILE_LAYOUT.length;
 const FRONT = PILE_LAYOUT[VISIBLE - 1];
@@ -58,6 +61,8 @@ interface CardStackProps {
  * first day it wraps back round to the newest.
  */
 export function CardStack({ days, today }: CardStackProps) {
+  const revealed = useIsRevealed();
+  const revealsAt = formatRevealTime(REVEAL_AT);
   const headingId = useId();
   const byDay = useMemo(() => new Map(days.map((day) => [day.day, day])), [days]);
   // Day numbers, front of the deck first.
@@ -76,7 +81,11 @@ export function CardStack({ days, today }: CardStackProps) {
     if (!next) return;
     const tossed = order[0];
     setOrder((current) => moveItem(current, 0, current.length - 1));
-    setAnnouncement(`December ${next.day}: ${next.title}, ${next.status}`);
+    setAnnouncement(
+      next.day === today && !revealed
+        ? `December ${next.day}: today, title hidden until ${revealsAt}`
+        : `December ${next.day}: ${next.title}, ${next.status}`,
+    );
 
     window.clearTimeout(timer.current);
     if (prefersReducedMotion()) {
@@ -92,6 +101,13 @@ export function CardStack({ days, today }: CardStackProps) {
       <h2 id={headingId} className="visually-hidden">
         Your calendar so far
       </h2>
+
+      {/* Date of the card in front; follows the deck as it flips. */}
+      {total > 0 && (
+        <p className={styles.date} aria-hidden="true">
+          December {order[0]}
+        </p>
+      )}
 
       <div className={styles.pile}>
         {/* Rendered in a fixed (day) order so cards animate between slots instead of re-mounting. */}
@@ -110,12 +126,17 @@ export function CardStack({ days, today }: CardStackProps) {
               aria-hidden={isFront ? undefined : true}
               inert={!isFront}
             >
-              <CalCard
-                day={day.day}
-                title={day.title}
-                status={day.status}
-                variant={day.day === today ? 'current' : 'past'}
-              />
+              {day.day === today ? (
+                <TodayCard
+                  day={day.day}
+                  title={day.title}
+                  status={day.status}
+                  hidden={!revealed}
+                  revealsAt={revealsAt}
+                />
+              ) : (
+                <CalCard day={day.day} title={day.title} status={day.status} variant="past" />
+              )}
             </div>
           );
         })}

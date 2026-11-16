@@ -24,19 +24,16 @@
   width: 100%;
 }
 
+/* Tabs sit at y 668 and the guess field at 741 in the 880px-tall frame. */
 .tabs {
-  margin-top: 18px;
-}
-
-.progress {
-  margin-top: 58px;
+  margin-top: 76px;
 }
 
 .guess {
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-top: 35px;
+  margin-top: 42px;
 }
 
 /* Keep content clear of the fixed nav rail on narrow screens. */

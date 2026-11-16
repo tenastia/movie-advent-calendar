@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router';
 import { CalendarTabs } from '../../components/CalendarTabs/CalendarTabs';
 import { CardStack } from '../../components/CardStack/CardStack';
 import { GuessForm } from '../../components/GuessForm/GuessForm';
-import { ProgressTrack } from '../../components/ProgressTrack/ProgressTrack';
 import { SiteHeader } from '../../components/SiteHeader/SiteHeader';
 import { TodaysReveal } from '../../components/TodaysReveal/TodaysReveal';
 import { useCalendars } from '../../data/CalendarsContext';
@@ -45,10 +44,6 @@ export function HomePage() {
               if (id === 'others') navigate('/calendars');
             }}
           />
-        </div>
-
-        <div className={styles.progress}>
-          <ProgressTrack />
         </div>
 
         <div className={styles.guess}>

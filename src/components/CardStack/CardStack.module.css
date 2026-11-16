@@ -1,8 +1,8 @@
 .stack {
   position: absolute;
   top: 50%;
-  /* 1160px from the left of the 1440px design frame = 440px right of centre. */
-  left: calc(50% + 440px);
+  /* 1180px from the left of the 1440px design frame = 460px right of centre. */
+  left: calc(50% + 460px);
   width: 188.32px;
   height: 206.16px;
   transform: translateY(-50%);
@@ -14,16 +14,37 @@
   height: 100%;
 }
 
+/* "DECEMBER 9" above the pile (Figma "Frame 71"): 14px gap, 10px padding. */
+.date {
+  position: absolute;
+  bottom: calc(100% + 14px);
+  left: 50%;
+  margin: 0;
+  padding: 10px;
+  transform: translateX(-50%);
+  color: var(--colour-typography-label);
+  font-weight: var(--font-weight-regular);
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.48px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 /* Each card sits at its slot via --x / --y / --rotate (set inline). */
 .item,
 .next {
   position: absolute;
   top: 0;
   left: 0;
-  width: 167px;
-  height: 168px;
   border-radius: var(--border-radius-card-small);
   transform: translate(var(--x), calc(var(--y) + var(--lift, 0px))) rotate(var(--rotate));
+}
+
+/* The click target matches a card in the front slot. */
+.next {
+  width: 167px;
+  height: 168px;
 }
 
 .item {
@@ -77,7 +98,8 @@
     position: relative;
     top: auto;
     left: auto;
-    margin-top: 56px;
+    /* Room for the date label above the pile. */
+    margin-top: 104px;
     transform: none;
   }
 }

@@ -20,7 +20,7 @@ export const mockCalendar: Calendar = {
   name: 'Nastia’s Calendar',
   description: 'The movies I rewatch every December',
   length: 24,
-  revealTime: '19:00',
+  revealTime: '12:00',
   attemptsPerDay: 3,
   // Today's movie is a placeholder; once there's a backend the answer must come from the server.
   today: { day: 9, title: 'The Holdovers', reveal: sampleReveal },
@@ -43,7 +43,7 @@ const dreadTheHalls: Calendar = {
   name: 'Dread the Halls',
   description: 'Horror for the longest nights of the year.',
   length: 12,
-  revealTime: '19:00',
+  revealTime: '12:00',
   attemptsPerDay: 3,
   today: { day: 15, title: 'Gremlins', reveal: sampleReveal },
   days: [
@@ -58,7 +58,7 @@ const silverBells: Calendar = {
   name: 'Silver Bells',
   description: 'Black-and-white classics that still hold up.',
   length: 12,
-  revealTime: '19:00',
+  revealTime: '12:00',
   attemptsPerDay: 3,
   today: { day: 15, title: 'Christmas in Connecticut', reveal: sampleReveal },
   days: [
