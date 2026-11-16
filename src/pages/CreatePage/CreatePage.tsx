@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { ListNameField } from '../../components/ListNameField/ListNameField';
 import { PreviewPanel, type RevealStyle } from '../../components/PreviewPanel/PreviewPanel';
 import { SegmentedControl } from '../../components/SegmentedControl/SegmentedControl';
@@ -25,6 +25,7 @@ export function CreatePage() {
   const nameId = useId();
   const daysLabelId = useId();
   const titlesLabelId = useId();
+  const daysField = useRef<HTMLDivElement>(null);
 
   const [name, setName] = useState('');
   const [days, setDays] = useState<Duration>(24);
@@ -60,10 +61,16 @@ export function CreatePage() {
             <label htmlFor={nameId} className={styles.label}>
               Calendar Name
             </label>
-            <ListNameField id={nameId} value={name} onChange={setName} />
+            <ListNameField
+              id={nameId}
+              value={name}
+              onChange={setName}
+              // Enter confirms the name and moves on to the Days picker.
+              onEnter={() => daysField.current?.querySelector<HTMLInputElement>('input:checked')?.focus()}
+            />
           </div>
 
-          <div className={`${styles.field} ${styles.daysField}`}>
+          <div className={`${styles.field} ${styles.daysField}`} ref={daysField}>
             <p id={daysLabelId} className={styles.label}>
               Days
             </p>

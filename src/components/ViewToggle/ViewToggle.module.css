@@ -18,9 +18,14 @@
   cursor: pointer;
 }
 
-.button svg {
+.glyph {
   position: relative;
   display: block;
+  /*
+   * The exported glyphs are filled #4d4d4d (icon-inactive); the design now draws
+   * them in #a0a0a0 (icon-action). 77 × 2.078 = 160.
+   */
+  filter: brightness(2.078);
 }
 
 /* Selection circle: the 5%-white ellipse from the Figma icon export, filling the 26px button. */
@@ -34,15 +39,9 @@
   transition: opacity 120ms ease-out;
 }
 
-.button[aria-pressed='true']::before {
-  opacity: 1;
-}
-
+/* Selected and hovered buttons show the same circle. */
+.button[aria-pressed='true']::before,
 .button:hover::before {
-  opacity: 0.6;
-}
-
-.button[aria-pressed='true']:hover::before {
   opacity: 1;
 }
 

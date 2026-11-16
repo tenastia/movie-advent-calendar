@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { getCountdownRange } from '../../lib/calendar';
 import styles from './TitleList.module.css';
 
@@ -14,6 +15,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 /** List view of the calendar: one row per day, each with its movie title. */
 export function TitleList({ days, titles, onChangeTitle }: TitleListProps) {
   const { first } = getCountdownRange(days);
+  const inputs = useRef<(HTMLInputElement | null)[]>([]);
 
   return (
     <div className={styles.wrapper}>
@@ -28,13 +30,29 @@ export function TitleList({ days, titles, onChangeTitle }: TitleListProps) {
                 <span className={styles.month}>DEC</span>
               </div>
               <input
+                ref={(element) => {
+                  inputs.current[row] = element;
+                }}
                 className={styles.input}
                 type="text"
                 placeholder={`Add movie title for Dec ${day}`}
                 aria-label={`Movie title for December ${day}`}
                 autoComplete="off"
+                enterKeyHint={row < days - 1 ? 'next' : 'done'}
                 value={titles[index] ?? ''}
                 onChange={(event) => onChangeTitle(index, event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key !== 'Enter' || event.nativeEvent.isComposing) return;
+                  event.preventDefault();
+                  // Enter moves on to the next day, like the calendar view; the last day just closes.
+                  const next = inputs.current[row + 1];
+                  if (next) {
+                    next.focus({ preventScroll: true });
+                    next.scrollIntoView({ block: 'nearest' });
+                  } else {
+                    event.currentTarget.blur();
+                  }
+                }}
               />
             </li>
           );

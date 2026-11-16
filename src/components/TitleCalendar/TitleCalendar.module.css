@@ -64,12 +64,14 @@
   opacity: 0.4;
 }
 
+/* Days in the calendar's range: one step heavier than the dimmed ones (Light → Regular). */
 .day {
   margin: 0;
   padding: 0;
   background: none;
   border: 0;
   border-radius: 8px;
+  font-weight: var(--font-weight-regular);
   cursor: pointer;
 }
 
