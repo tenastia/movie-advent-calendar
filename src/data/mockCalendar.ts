@@ -22,7 +22,8 @@ export const mockCalendar: Calendar = {
   length: 24,
   revealTime: '19:00',
   attemptsPerDay: 3,
-  today: { day: 9, reveal: sampleReveal },
+  // Today's movie is a placeholder; once there's a backend the answer must come from the server.
+  today: { day: 9, title: 'The Holdovers', reveal: sampleReveal },
   days: [
     { day: 1, title: 'The secret life of Walter Mitty', status: 'guessed' },
     { day: 2, title: 'Klaus', status: 'missed' },
@@ -32,7 +33,7 @@ export const mockCalendar: Calendar = {
     { day: 6, title: 'Love Actually', status: 'missed' },
     { day: 7, title: 'The Holiday', status: 'guessed' },
     { day: 8, title: 'It’s a Wonderful Life', status: 'missed' },
-    { day: 9, title: 'The secret life of Walter Mitty', status: 'guessed' },
+    { day: 9, title: 'The Holdovers', status: 'guessed' },
   ],
 };
 
@@ -44,7 +45,7 @@ const dreadTheHalls: Calendar = {
   length: 12,
   revealTime: '19:00',
   attemptsPerDay: 3,
-  today: { day: 15, reveal: sampleReveal },
+  today: { day: 15, title: 'Gremlins', reveal: sampleReveal },
   days: [
     { day: 13, title: 'Black Christmas', status: 'guessed' },
     { day: 14, title: 'Krampus', status: 'missed' },
@@ -59,7 +60,7 @@ const silverBells: Calendar = {
   length: 12,
   revealTime: '19:00',
   attemptsPerDay: 3,
-  today: { day: 15, reveal: sampleReveal },
+  today: { day: 15, title: 'Christmas in Connecticut', reveal: sampleReveal },
   days: [
     { day: 13, title: 'Miracle on 34th Street', status: 'guessed' },
     { day: 14, title: 'The Shop Around the Corner', status: 'missed' },

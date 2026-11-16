@@ -1,7 +1,7 @@
 import { useId } from 'react';
 import type { RevealImage } from '../../data/types';
 import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
-import { TodaysReveal } from '../TodaysReveal/TodaysReveal';
+import { RevealArt } from '../RevealArt/RevealArt';
 import styles from './PreviewPanel.module.css';
 
 export type RevealStyle = 'drifting' | 'blizzard' | 'image';
@@ -42,7 +42,7 @@ export function PreviewPanel({ image, revealStyle, onRevealStyleChange, onShare 
       </div>
 
       <div className={styles.stage}>
-        <TodaysReveal image={image} width={233} />
+        <RevealArt image={image} width={233} />
       </div>
     </section>
   );
