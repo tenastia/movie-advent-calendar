@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatRevealTime, REVEAL_AT } from './reveal';
+import { formatRevealTime, MOTION_START, REVEAL_AT, revealProgress } from './reveal';
 
 describe('formatRevealTime', () => {
   it('formats whole hours without minutes', () => {
@@ -18,5 +18,17 @@ describe('formatRevealTime', () => {
 describe('REVEAL_AT', () => {
   it('matches the calendar preset, where the title completes at noon', () => {
     expect(formatRevealTime(REVEAL_AT)).toBe('12pm');
+  });
+});
+
+describe('revealProgress', () => {
+  it('runs from the start of the motion to the reveal', () => {
+    expect(revealProgress(MOTION_START)).toBe(0);
+    expect(revealProgress((MOTION_START + REVEAL_AT) / 2)).toBeCloseTo(0.5);
+    expect(revealProgress(REVEAL_AT)).toBe(1);
+  });
+
+  it('stays full after the reveal', () => {
+    expect(revealProgress(REVEAL_AT + 3600)).toBe(1);
   });
 });

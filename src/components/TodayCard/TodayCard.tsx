@@ -1,6 +1,7 @@
-import todayGlow from '../../assets/ui/today-glow.svg';
+import { useEffect, useRef } from 'react';
 import todayOutline from '../../assets/ui/today-outline.svg';
 import type { DayStatus } from '../../data/types';
+import { createDayClock, revealProgress } from '../../motion/reveal';
 import { StatusLabel } from '../StatusLabel/StatusLabel';
 import styles from './TodayCard.module.css';
 
@@ -18,12 +19,42 @@ interface TodayCardProps {
 // (enough to fill them in any font; the rest is clipped).
 const HIDDEN_TITLE = '*'.repeat(90);
 
+/**
+ * Keeps `--progress` (0 → 1) on the element in step with the letter motion:
+ * empty when the day's motion starts, full when the title is in place.
+ * Updated per frame without re-rendering; pauses with the tab.
+ */
+function useRevealProgress<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    const dayTime = createDayClock();
+    let frame = 0;
+    let last = -1;
+    const tick = () => {
+      const progress = revealProgress(dayTime());
+      if (Math.abs(progress - last) > 0.0002) {
+        ref.current?.style.setProperty('--progress', progress.toFixed(4));
+        last = progress;
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    tick();
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  return ref;
+}
+
 /** Today's card in the pile (Figma "CalCard" with the "Today" pill). */
 export function TodayCard({ day, title, status, hidden, revealsAt }: TodayCardProps) {
+  const progressRef = useRevealProgress<HTMLDivElement>();
+
   return (
     <article className={styles.card}>
       <img className={styles.outline} src={todayOutline} width={174} height={175} alt="" />
-      <img className={styles.glow} src={todayGlow} width={115} height={38.5} alt="" />
+      {/* Time until the reveal: fills clockwise from the top centre. */}
+      <div ref={progressRef} className={styles.progress} aria-hidden="true" />
 
       <div className={styles.body}>
         <div className={styles.top}>
