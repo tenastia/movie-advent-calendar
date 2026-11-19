@@ -27,8 +27,9 @@ src/
   assets/          Images and icons exported from Figma
   components/      UI building blocks (one folder per component, CSS Modules)
   data/            Types and mock calendar data
+  hooks/           Shared React hooks (media queries)
   lab/             The motion lab UI (sliders, transport, recorder)
-  lib/             Framework-free helpers (countdown maths)
+  lib/             Framework-free helpers (countdown and carousel-loop maths)
   motion/          The letter engine, shaders and presets
   pages/HomePage/  The home page
   styles/          Design tokens (mirrors Figma variables) and global styles

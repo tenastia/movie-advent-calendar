@@ -91,3 +91,10 @@
     flex-basis: auto;
   }
 }
+
+/* Phones: no side rail to clear, but the floating nav bar sits over the bottom. */
+@media (max-width: 639px) {
+  .page {
+    padding: 20.5px 16px 120px;
+  }
+}

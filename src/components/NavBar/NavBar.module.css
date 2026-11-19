@@ -48,6 +48,24 @@
   opacity: 1;
 }
 
+/*
+ * Phones (Figma 402px frames): the rail turns into a floating bar centred at
+ * the bottom of the screen, 164×60, 27px up from the bottom edge.
+ */
+@media (max-width: 639px) {
+  .nav {
+    top: auto;
+    bottom: calc(27px + env(safe-area-inset-bottom, 0px));
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  }
+
+  .list {
+    flex-direction: row;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hover {
     transition: none;
