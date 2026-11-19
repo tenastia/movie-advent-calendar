@@ -91,3 +91,17 @@
     padding-inline: 84px 16px;
   }
 }
+
+/*
+ * Phones: the nav floats at the bottom instead (see NavBar), so the side gutter
+ * goes and the guess field ends 29px above the bar (Figma 402px "MainScreen").
+ */
+@media (max-width: 639px) {
+  .page {
+    padding-bottom: 120px;
+  }
+
+  .screen {
+    padding: 20.5px 22px 116px;
+  }
+}

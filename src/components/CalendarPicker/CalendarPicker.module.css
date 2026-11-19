@@ -47,6 +47,23 @@
   }
 }
 
+/*
+ * Phones: the carousel runs sideways instead, so nothing scrolls up and down.
+ * The top padding balances the progress bar below, putting the cards at y 287
+ * on an 874px-tall screen, as in the Figma phone frame.
+ */
+@media (max-width: 639px) {
+  .scroller {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 27px;
+    overflow: hidden;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .overlay {
     animation: none;

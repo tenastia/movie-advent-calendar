@@ -1,6 +1,7 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useLayoutEffect, useMemo, type RefObject } from 'react';
 import type { PerspectiveCamera } from 'three';
+import { PHONE_QUERY, useMediaQuery } from '../../hooks/useMediaQuery';
 import { clock } from '../../motion/clock';
 import { LetterScene } from '../../motion/LetterScene';
 import { DEFAULT_PRESET } from '../../motion/presets';
@@ -18,6 +19,13 @@ interface LetterBackdropProps {
   /** Canvas clear colour; should match the page background. */
   background: string;
 }
+
+/**
+ * On phones the screen's width limits the number, and the preset's share of
+ * it leaves the number tiny. There it spans the content column instead: the
+ * 358px between the 22px margins of a 402px screen, as wide as the guess field.
+ */
+const PHONE_NUMBER_FILL = 358 / 402;
 
 /** Drives the shared motion clock from the wall clock (plus any ?time / ?speed override). */
 function WallClock() {
@@ -64,7 +72,12 @@ function CentreOn({ anchorRef }: { anchorRef: RefObject<HTMLElement | null> }) {
 
 export default function LetterBackdrop({ day, title, nextTitle = '', anchorRef, background }: LetterBackdropProps) {
   const reduced = usePrefersReducedMotion();
-  const params = useMemo(() => ({ ...DEFAULT_PRESET.params, background }), [background]);
+  const isPhone = useMediaQuery(PHONE_QUERY);
+  const params = useMemo(() => {
+    const preset = DEFAULT_PRESET.params;
+    const numberFill = isPhone ? Math.max(preset.numberFill, PHONE_NUMBER_FILL) : preset.numberFill;
+    return { ...preset, numberFill, background };
+  }, [background, isPhone]);
 
   return (
     <div className={styles.backdrop} aria-hidden="true">
