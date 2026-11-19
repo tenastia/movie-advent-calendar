@@ -6,12 +6,17 @@ const STATUS_CONTENT: Record<DayStatus, { emoji: string; text: string }> = {
   missed: { emoji: '😓', text: 'Missed' },
 };
 
-interface StatusLabelProps {
-  status: DayStatus;
-}
+type StatusLabelProps =
+  | { status: DayStatus }
+  /** Today, before the reveal (Figma StatusLabel "Status3"). */
+  | { status: 'upcoming'; revealsAt: string };
 
-export function StatusLabel({ status }: StatusLabelProps) {
-  const { emoji, text } = STATUS_CONTENT[status];
+export function StatusLabel(props: StatusLabelProps) {
+  const { emoji, text } =
+    props.status === 'upcoming'
+      ? { emoji: '🤫', text: `Reveals at ${props.revealsAt}` }
+      : STATUS_CONTENT[props.status];
+
   return (
     <span className={styles.label}>
       <span className={styles.emoji} aria-hidden="true">

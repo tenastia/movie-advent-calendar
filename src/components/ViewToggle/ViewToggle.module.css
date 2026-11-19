@@ -1,0 +1,57 @@
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.glyph {
+  position: relative;
+  display: block;
+  /*
+   * The exported glyphs are filled #4d4d4d (icon-inactive); the design now draws
+   * them in #a0a0a0 (icon-action). 77 × 2.078 = 160.
+   */
+  filter: brightness(2.078);
+}
+
+/* Selection circle: the 5%-white ellipse from the Figma icon export, filling the 26px button. */
+.button::before {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  opacity: 0;
+  content: '';
+  transition: opacity 120ms ease-out;
+}
+
+/* Selected and hovered buttons show the same circle. */
+.button[aria-pressed='true']::before,
+.button:hover::before {
+  opacity: 1;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--colour-border-input-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button::before {
+    transition: none;
+  }
+}

@@ -21,15 +21,15 @@ export function toIsoDuration(ms: number): string {
   return `PT${totalSeconds}S`;
 }
 
+const DECEMBER = 11;
+
 /**
- * Next occurrence of a daily reveal time ("HH:MM", local time) strictly after `now`.
+ * The Christmas to count down to: midnight starting 25 December, local time.
+ * Through Christmas Day this is the current year's (so the countdown rests at
+ * zero on the day itself); from 26 December it is next year's.
  */
-export function getNextRevealAt(now: Date, revealTime: string): Date {
-  const [hours, minutes] = revealTime.split(':').map(Number);
-  const next = new Date(now);
-  next.setHours(hours, minutes, 0, 0);
-  if (next.getTime() <= now.getTime()) {
-    next.setDate(next.getDate() + 1);
-  }
-  return next;
+export function getChristmasTarget(now: Date): Date {
+  const year = now.getFullYear();
+  const dayAfterChristmas = new Date(year, DECEMBER, 26);
+  return new Date(now < dayAfterChristmas ? year : year + 1, DECEMBER, 25);
 }

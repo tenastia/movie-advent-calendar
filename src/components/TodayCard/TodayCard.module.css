@@ -1,0 +1,115 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* Status sits at the bottom, as on the other cards; 15px is the minimum gap. */
+  justify-content: space-between;
+  gap: 15px;
+  width: 168px;
+  height: 169px;
+  padding: 16px;
+  background: var(--colour-background-card-background);
+  border-radius: var(--border-radius-card-small);
+}
+
+/* Figma "Vector 1 (Stroke)": the card's outline, 3px larger than the card on each side. */
+.outline {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  pointer-events: none;
+}
+
+/*
+ * Time until the reveal (Figma "Vector 2"): a 2px band just outside the card's
+ * edge that fills clockwise from the centre of the top side. The design's
+ * blue-to-purple gradient stretches over the filled part and returns to its
+ * starting blue at the head, so the complete ring closes without a seam.
+ */
+.progress {
+  --angle: calc(var(--progress, 0) * 360deg);
+  position: absolute;
+  inset: -2px;
+  padding: 2px;
+  border-radius: 10px;
+  background: conic-gradient(
+    #2240ac 0deg,
+    #3f5cd0 calc(var(--angle) / 3),
+    #622db1 calc(var(--angle) * 2 / 3),
+    #2240ac var(--angle),
+    transparent var(--angle)
+  );
+  /* Ring (border box minus content box), cut to the elapsed angle. */
+  mask-image:
+    conic-gradient(#000 var(--angle), transparent 0),
+    linear-gradient(#000 0 0),
+    linear-gradient(#000 0 0);
+  mask-clip: border-box, content-box, border-box;
+  mask-composite: intersect, exclude, add;
+  pointer-events: none;
+}
+
+.body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.day {
+  margin: 0;
+  color: var(--colour-typography-number-current);
+  font-weight: var(--font-weight-regular);
+  font-size: 48px;
+  line-height: 48px;
+  /* Trim the line box to the digits' cap height, as in Figma. */
+  text-box: trim-both cap alphabetic;
+}
+
+@supports not (text-box: trim-both cap alphabetic) {
+  .day {
+    line-height: 0.71;
+  }
+}
+
+.today {
+  padding: 0 6px;
+  border: 1px solid var(--colour-icon-icon-action);
+  border-radius: 12px;
+  color: var(--colour-icon-icon-action);
+  font-weight: var(--font-weight-light);
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.title {
+  display: -webkit-box;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  color: var(--colour-typography-movie-current);
+  font-weight: var(--font-weight-light);
+  font-size: 15px;
+  line-height: 18px;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+/* The hidden title: three full lines of asterisks, clipped cleanly (no "…"). */
+.hiddenTitle {
+  display: block;
+  max-height: 54px;
+  -webkit-line-clamp: unset;
+  line-clamp: none;
+}
