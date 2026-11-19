@@ -24,7 +24,8 @@
 /*
  * Time until the reveal (Figma "Vector 2"): a 2px band just outside the card's
  * edge that fills clockwise from the centre of the top side. The design's
- * blue-to-purple gradient stretches over the filled part, so the head is purple.
+ * blue-to-purple gradient stretches over the filled part and returns to its
+ * starting blue at the head, so the complete ring closes without a seam.
  */
 .progress {
   --angle: calc(var(--progress, 0) * 360deg);
@@ -34,8 +35,9 @@
   border-radius: 10px;
   background: conic-gradient(
     #2240ac 0deg,
-    #3f5cd0 calc(var(--angle) * 0.486),
-    #622db1 var(--angle),
+    #3f5cd0 calc(var(--angle) / 3),
+    #622db1 calc(var(--angle) * 2 / 3),
+    #2240ac var(--angle),
     transparent var(--angle)
   );
   /* Ring (border box minus content box), cut to the elapsed angle. */
