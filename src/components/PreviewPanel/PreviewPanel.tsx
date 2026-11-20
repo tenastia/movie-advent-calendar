@@ -1,4 +1,5 @@
 import { useId } from 'react';
+import { PHONE_QUERY, useMediaQuery } from '../../hooks/useMediaQuery';
 import type { RevealImage } from '../../data/types';
 import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
 import { RevealArt } from '../RevealArt/RevealArt';
@@ -21,6 +22,8 @@ interface PreviewPanelProps {
 
 export function PreviewPanel({ image, revealStyle, onRevealStyleChange, onShare }: PreviewPanelProps) {
   const styleLabelId = useId();
+  // The artwork is 144px wide in the phone preview (Figma "Frame 25"), 233px on wider screens.
+  const isPhone = useMediaQuery(PHONE_QUERY);
 
   return (
     <section className={styles.panel} aria-label="Preview">
@@ -42,7 +45,7 @@ export function PreviewPanel({ image, revealStyle, onRevealStyleChange, onShare 
       </div>
 
       <div className={styles.stage}>
-        <RevealArt image={image} width={233} />
+        <RevealArt image={image} width={isPhone ? 144 : 233} />
       </div>
     </section>
   );

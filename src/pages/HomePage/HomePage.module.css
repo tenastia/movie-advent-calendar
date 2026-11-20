@@ -93,15 +93,32 @@
 }
 
 /*
- * Phones: the nav floats at the bottom instead (see NavBar), so the side gutter
- * goes and the guess field ends 29px above the bar (Figma 402px "MainScreen").
+ * Phones (Figma 402px "MainScreen"): the nav floats at the bottom (see NavBar),
+ * so the side gutter goes. Today's date box replaces the pile of cards: on an
+ * 874px screen it sits at y 546, the stacked tabs at 614 and the guess field at
+ * 706, with "Remaining attempts" ending 11px above the nav bar. The letters
+ * take the space above the box.
  */
 @media (max-width: 639px) {
   .page {
-    padding-bottom: 120px;
+    padding-bottom: 0;
   }
 
   .screen {
-    padding: 20.5px 22px 116px;
+    padding: 20.5px 22px 98px;
+  }
+
+  .today {
+    flex: none;
+    margin-top: 16px;
+  }
+
+  .tabs {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .guess {
+    margin-top: 24px;
   }
 }

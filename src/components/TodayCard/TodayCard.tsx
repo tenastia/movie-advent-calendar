@@ -1,7 +1,6 @@
-import { useEffect, useRef } from 'react';
 import todayOutline from '../../assets/ui/today-outline.svg';
 import type { DayStatus } from '../../data/types';
-import { createDayClock, revealProgress } from '../../motion/reveal';
+import { useRevealProgress } from '../../hooks/useRevealProgress';
 import { StatusLabel } from '../StatusLabel/StatusLabel';
 import styles from './TodayCard.module.css';
 
@@ -18,33 +17,6 @@ interface TodayCardProps {
 // Stand-in for the hidden title, as in the design: three lines of asterisks
 // (enough to fill them in any font; the rest is clipped).
 const HIDDEN_TITLE = '*'.repeat(90);
-
-/**
- * Keeps `--progress` (0 → 1) on the element in step with the letter motion:
- * empty when the day's motion starts, full when the title is in place.
- * Updated per frame without re-rendering; pauses with the tab.
- */
-function useRevealProgress<T extends HTMLElement>() {
-  const ref = useRef<T>(null);
-
-  useEffect(() => {
-    const dayTime = createDayClock();
-    let frame = 0;
-    let last = -1;
-    const tick = () => {
-      const progress = revealProgress(dayTime());
-      if (Math.abs(progress - last) > 0.0002) {
-        ref.current?.style.setProperty('--progress', progress.toFixed(4));
-        last = progress;
-      }
-      frame = requestAnimationFrame(tick);
-    };
-    tick();
-    return () => cancelAnimationFrame(frame);
-  }, []);
-
-  return ref;
-}
 
 /** Today's card in the pile (Figma "CalCard" with the "Today" pill). */
 export function TodayCard({ day, title, status, hidden, revealsAt }: TodayCardProps) {

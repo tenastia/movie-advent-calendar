@@ -5,7 +5,6 @@ import { createRoot } from 'react-dom/client';
 // closest freely-licensed fallback elsewhere, and the segmented buttons use
 // Inter explicitly. Only the weights the design uses.
 import '@fontsource/inter/latin-100.css';
-import '@fontsource/inter/latin-300.css';
 import '@fontsource/inter/latin-400.css';
 import '@fontsource/inter/latin-500.css';
 import '@fontsource/inter/latin-600.css';

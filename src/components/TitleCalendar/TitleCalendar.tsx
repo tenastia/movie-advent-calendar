@@ -30,6 +30,7 @@ export function TitleCalendar({ year, days, titles, onChangeTitle }: TitleCalend
   // done) on Enter or when focus leaves the field; Escape discards it.
   const [draft, setDraft] = useState('');
   const discardOnBlur = useRef(false);
+  const titleInput = useRef<HTMLInputElement>(null);
   const dayButtons = useRef(new Map<number, HTMLButtonElement>());
   const { first, last } = getCountdownRange(days);
 
@@ -140,21 +141,42 @@ export function TitleCalendar({ year, days, titles, onChangeTitle }: TitleCalend
         })}
 
         {selectedDay !== null && (
-          <input
-            id={inputId}
-            className={styles.titleInput}
-            style={{ '--row': selectedRow } as CSSProperties}
-            type="text"
-            placeholder="Enter Movie Title"
-            aria-label={`Movie title for December ${selectedDay}`}
-            autoComplete="off"
-            enterKeyHint={selectedDay < last ? 'next' : 'done'}
-            autoFocus
-            value={draft}
-            onChange={(event) => setDraft(event.target.value)}
-            onKeyDown={handleInputKeyDown}
-            onBlur={handleInputBlur}
-          />
+          <div className={styles.titleField} style={{ '--row': selectedRow } as CSSProperties}>
+            <input
+              ref={titleInput}
+              id={inputId}
+              className={styles.titleInput}
+              type="text"
+              placeholder="Enter Movie Title"
+              aria-label={`Movie title for December ${selectedDay}`}
+              autoComplete="off"
+              enterKeyHint={selectedDay < last ? 'next' : 'done'}
+              autoFocus
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              onKeyDown={handleInputKeyDown}
+              onBlur={handleInputBlur}
+            />
+            {draft !== '' && (
+              <button
+                type="button"
+                className={styles.clear}
+                aria-label="Clear title"
+                // Out of the tab order (Tab leaving the field saves and closes it).
+                tabIndex={-1}
+                // Keep focus, and the on-screen keyboard, in the field: no blur, so nothing is saved yet.
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => {
+                  setDraft('');
+                  titleInput.current?.focus();
+                }}
+              >
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                  <path d="M1 1l8 8M9 1L1 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
+                </svg>
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>

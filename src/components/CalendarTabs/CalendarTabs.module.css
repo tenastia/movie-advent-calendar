@@ -39,6 +39,29 @@
   outline-offset: 2px;
 }
 
+/*
+ * Phones (Figma 402px "MainScreen"): the calendar's name above "Other
+ * Calendars", 8px apart. The unselected label has no border there (29px tall),
+ * and a long name shortens with an ellipsis rather than overflowing.
+ */
+@media (max-width: 639px) {
+  .tabs {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tab {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tab:not([aria-pressed='true']) {
+    border-width: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .tab {
     transition: none;
