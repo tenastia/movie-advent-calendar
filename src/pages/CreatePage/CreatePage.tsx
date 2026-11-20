@@ -124,7 +124,7 @@ export function CreatePage() {
                 <MonthCalendar
                   year={year}
                   month={DECEMBER}
-                  activeDays={days}
+                  days={days}
                   titles={titles}
                   onTitleChange={setTitle}
                 />

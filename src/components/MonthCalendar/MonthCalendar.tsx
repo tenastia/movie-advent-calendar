@@ -2,7 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import dayCheck from '../../assets/create/day-check.svg';
 import dayFilled from '../../assets/create/day-filled.svg';
 import daySelected from '../../assets/create/day-selected.svg';
-import { getMonthWeeks } from '../../lib/calendarGrid';
+import { getCountdownRange, getMonthWeeks } from '../../lib/calendarGrid';
 import text from '../../styles/text.module.css';
 import { InputField } from '../InputField/InputField';
 import styles from './MonthCalendar.module.css';
@@ -20,17 +20,18 @@ interface MonthCalendarProps {
   year: number;
   /** 0-based month. */
   month: number;
-  /** Days 1…activeDays can hold a movie; the rest of the month is dimmed. */
-  activeDays: number;
+  /** Number of calendar days, counting down to Christmas Eve; the rest of the month is dimmed. */
+  days: number;
   titles: Record<number, string>;
   onTitleChange: (day: number, title: string) => void;
 }
 
 /**
  * The "December 2026 Calendar" picker. Tapping a day opens a title field under
- * its week; days that already have a movie show the check mark.
+ * its week; days that already have a movie show the check mark. Only the days
+ * counting down to Christmas Eve can be picked.
  */
-export function MonthCalendar({ year, month, activeDays, titles, onTitleChange }: MonthCalendarProps) {
+export function MonthCalendar({ year, month, days, titles, onTitleChange }: MonthCalendarProps) {
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dayButtons = useRef(new Map<number, HTMLButtonElement>());
@@ -38,7 +39,9 @@ export function MonthCalendar({ year, month, activeDays, titles, onTitleChange }
   const popoverId = useId();
 
   const weeks = useMemo(() => getMonthWeeks(year, month), [year, month]);
-  const openDay = selectedDay !== null && selectedDay <= activeDays ? selectedDay : null;
+  const { first, last } = getCountdownRange(days);
+  // Close the title field if the selected day falls outside a shortened calendar.
+  const openDay = selectedDay !== null && selectedDay >= first && selectedDay <= last ? selectedDay : null;
   const openRow =
     openDay === null
       ? -1
@@ -72,7 +75,7 @@ export function MonthCalendar({ year, month, activeDays, titles, onTitleChange }
           <div key={week[0].date.toISOString()} className={styles.week}>
             {week.map(({ date, inMonth }) => {
               const day = date.getDate();
-              if (!inMonth || day > activeDays) {
+              if (!inMonth || day < first || day > last) {
                 return (
                   <span key={date.toISOString()} className={`${styles.day} ${styles.dim}`} aria-hidden="true">
                     {day}
@@ -124,6 +127,7 @@ export function MonthCalendar({ year, month, activeDays, titles, onTitleChange }
           >
             <InputField
               ref={inputRef}
+              className={styles.titleInput}
               aria-label={`Movie title for ${dayFormat.format(new Date(year, month, openDay))}`}
               placeholder="Enter Movie Title"
               autoComplete="off"
@@ -138,6 +142,25 @@ export function MonthCalendar({ year, month, activeDays, titles, onTitleChange }
               }}
               onBlur={() => setSelectedDay(null)}
             />
+            {(titles[openDay] ?? '') !== '' && (
+              <button
+                type="button"
+                className={styles.clear}
+                aria-label="Clear title"
+                // Out of the tab order (Tab leaving the field closes it); select-all + delete does the same.
+                tabIndex={-1}
+                // Keep focus, and the on-screen keyboard, in the field.
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => {
+                  onTitleChange(openDay, '');
+                  inputRef.current?.focus();
+                }}
+              >
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                  <path d="M1 1l8 8M9 1L1 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
+                </svg>
+              </button>
+            )}
           </div>
         )}
       </div>

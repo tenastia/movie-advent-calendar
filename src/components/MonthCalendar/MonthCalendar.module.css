@@ -102,8 +102,41 @@ button.day:focus-visible {
   z-index: 1;
 }
 
+/* Text stops short of the clear button. */
+.popover .titleInput {
+  padding-right: 40px;
+}
+
+/* Clears the whole title; sits in the field's 36px end slot, like the guess field's arrow. */
+.clear {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  transform: translateY(-50%);
+  background: none;
+  border: 0;
+  border-radius: 10px;
+  color: var(--colour-icon-icon-action);
+  cursor: pointer;
+  transition: color 120ms ease-out;
+}
+
+@media (hover: hover) {
+  .clear:hover {
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .number {
+  .number,
+  .clear {
     transition: none;
   }
 }

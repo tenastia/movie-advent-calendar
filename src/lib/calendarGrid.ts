@@ -20,3 +20,15 @@ export function getMonthWeeks(year: number, month: number): CalendarCell[][] {
     }),
   );
 }
+
+/** Every calendar counts down to Christmas, so its last day is always Christmas Eve. */
+export const COUNTDOWN_LAST_DAY = 24;
+
+/**
+ * The December days a calendar of `length` days covers: the run of days that
+ * ends on Christmas Eve (e.g. 6 days → 19–24 December). Matches the desktop Create page.
+ */
+export function getCountdownRange(length: number): { first: number; last: number } {
+  const days = Math.min(Math.max(Math.round(length), 1), COUNTDOWN_LAST_DAY);
+  return { first: COUNTDOWN_LAST_DAY - days + 1, last: COUNTDOWN_LAST_DAY };
+}

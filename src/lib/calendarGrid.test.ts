@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getMonthWeeks } from './calendarGrid';
+import { getCountdownRange, getMonthWeeks } from './calendarGrid';
 
 const label = (date: Date) => `${date.getMonth() + 1}/${date.getDate()}`;
 
@@ -19,5 +19,19 @@ describe('getMonthWeeks', () => {
     const weeks = getMonthWeeks(2027, 1); // February 2027
     expect(weeks).toHaveLength(4);
     expect(weeks.flat().every((cell) => cell.inMonth)).toBe(true);
+  });
+});
+
+describe('getCountdownRange', () => {
+  it('always ends on Christmas Eve', () => {
+    expect(getCountdownRange(6)).toEqual({ first: 19, last: 24 });
+    expect(getCountdownRange(12)).toEqual({ first: 13, last: 24 });
+    expect(getCountdownRange(18)).toEqual({ first: 7, last: 24 });
+    expect(getCountdownRange(24)).toEqual({ first: 1, last: 24 });
+  });
+
+  it('clamps out-of-range lengths', () => {
+    expect(getCountdownRange(0)).toEqual({ first: 24, last: 24 });
+    expect(getCountdownRange(40)).toEqual({ first: 1, last: 24 });
   });
 });

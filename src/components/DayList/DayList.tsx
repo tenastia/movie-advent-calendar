@@ -1,4 +1,5 @@
 import { useId, type KeyboardEvent } from 'react';
+import { getCountdownRange } from '../../lib/calendarGrid';
 import text from '../../styles/text.module.css';
 import styles from './DayList.module.css';
 
@@ -9,7 +10,7 @@ interface DayListProps {
   year: number;
   /** 0-based month. */
   month: number;
-  /** Number of days in the calendar, starting from the 1st. */
+  /** Number of calendar days, counting down to Christmas Eve. */
   days: number;
   titles: Record<number, string>;
   onTitleChange: (day: number, title: string) => void;
@@ -20,18 +21,21 @@ export function DayList({ year, month, days, titles, onTitleChange }: DayListPro
   const idPrefix = useId();
   const inputId = (day: number) => `${idPrefix}day-${day}`;
   const monthShort = shortMonthFormat.format(new Date(year, month, 1));
+  const { first, last } = getCountdownRange(days);
 
-  // Enter moves on to the next day, so titles can be typed in one go.
+  // Enter moves on to the next day, so titles can be typed in one go; the last day just closes.
   const handleKeyDown = (day: number) => (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key !== 'Enter') return;
+    if (event.key !== 'Enter' || event.nativeEvent.isComposing) return;
     event.preventDefault();
-    document.getElementById(inputId(day + 1))?.focus();
+    const next = document.getElementById(inputId(day + 1));
+    if (next) next.focus();
+    else event.currentTarget.blur();
   };
 
   return (
     <div className={styles.wrapper}>
       <ol className={styles.list}>
-        {Array.from({ length: days }, (_, index) => index + 1).map((day) => (
+        {Array.from({ length: last - first + 1 }, (_, index) => first + index).map((day) => (
           <li key={day} className={styles.row}>
             <label className={styles.date} htmlFor={inputId(day)} aria-hidden="true">
               <span className={styles.dayNumber}>{String(day).padStart(2, '0')}</span>
@@ -44,7 +48,7 @@ export function DayList({ year, month, days, titles, onTitleChange }: DayListPro
               aria-label={`Movie title for ${longDayFormat.format(new Date(year, month, day))}`}
               placeholder={`Add movie title for ${monthShort} ${day}`}
               autoComplete="off"
-              enterKeyHint={day < days ? 'next' : 'done'}
+              enterKeyHint={day < last ? 'next' : 'done'}
               value={titles[day] ?? ''}
               onChange={(event) => onTitleChange(day, event.target.value)}
               onKeyDown={handleKeyDown(day)}

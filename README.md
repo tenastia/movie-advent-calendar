@@ -52,6 +52,8 @@ Both pages run against mock data in `src/data/mockCalendar.ts`; there is no back
 
 - Guesses only count down the remaining attempts. Nothing checks them against an answer yet.
 - The countdown shows the time until the next daily reveal at 19:00 local time.
+- Like the desktop Create page, a calendar always ends on 24 December: 6 days covers 19–24 December,
+  24 days covers 1–24 December. Earlier days are dimmed.
 - The Create page keeps the draft (name, days, titles, reveal style) in memory only. "Share the Calendar"
   opens the share sheet (or copies the link) for the app itself, not for a saved calendar.
 - The reveal-style preview shows the same artwork for every style.
