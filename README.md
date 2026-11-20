@@ -34,7 +34,7 @@ src/
   styles/          Design tokens (mirrors Figma variables) and global styles
 ```
 
-Pages are picked from the URL hash (`#/` home, `#/create`), so the static build runs on any host
+Pages are picked from the URL hash (`#home`, `#create`), so the static build runs on any host
 without server rewrites. Below 640px wide the nav rail becomes a bar floating at the bottom of the screen.
 
 Styling uses CSS Modules plus CSS custom properties. `src/styles/tokens.css` mirrors the Figma

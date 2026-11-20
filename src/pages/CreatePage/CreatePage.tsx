@@ -49,21 +49,25 @@ export function CreatePage() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => event.preventDefault();
 
-  // There is no backend yet, so sharing hands out the app's own link.
+  // There is no backend yet, so sharing hands out the app's own link: the share
+  // sheet where the browser offers one, otherwise a copy to the clipboard.
   const handleShare = async () => {
     const url = window.location.href.split('#')[0];
-    const shareData = { title: name.trim() || 'Movie Advent Calendar', url };
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: name.trim() || 'Movie Advent Calendar', url });
         return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') return;
       }
+    }
+    try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
       window.clearTimeout(copiedTimer.current);
       copiedTimer.current = window.setTimeout(() => setCopied(false), 2000);
     } catch {
-      // The person dismissed the share sheet, or the clipboard is unavailable.
+      // Clipboard unavailable (e.g. no permission); nothing else to fall back to.
     }
   };
 
