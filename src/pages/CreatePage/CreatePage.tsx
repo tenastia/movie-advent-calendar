@@ -1,171 +1,108 @@
-import { useEffect, useId, useMemo, useRef, useState, type FormEvent } from 'react';
-import { Countdown } from '../../components/Countdown/Countdown';
-import { DayList } from '../../components/DayList/DayList';
-import { InputField } from '../../components/InputField/InputField';
-import { MonthCalendar } from '../../components/MonthCalendar/MonthCalendar';
-import { NavBar } from '../../components/NavBar/NavBar';
+import { useId, useRef, useState } from 'react';
+import { ListNameField } from '../../components/ListNameField/ListNameField';
+import { PreviewPanel, type RevealStyle } from '../../components/PreviewPanel/PreviewPanel';
 import { SegmentedControl } from '../../components/SegmentedControl/SegmentedControl';
-import { TodaysReveal } from '../../components/TodaysReveal/TodaysReveal';
-import { ViewToggle, type DayPickerView } from '../../components/ViewToggle/ViewToggle';
-import { Wordmark } from '../../components/Wordmark/Wordmark';
+import { SiteHeader } from '../../components/SiteHeader/SiteHeader';
+import { TitleCalendar } from '../../components/TitleCalendar/TitleCalendar';
+import { TitleList } from '../../components/TitleList/TitleList';
+import { ViewToggle, type TitlesView } from '../../components/ViewToggle/ViewToggle';
 import { mockCalendar } from '../../data/mockCalendar';
-import type { RevealStyle } from '../../data/types';
-import { getNextRevealAt } from '../../lib/countdown';
-import text from '../../styles/text.module.css';
 import styles from './CreatePage.module.css';
 
-const DECEMBER = 11;
+const MAX_DAYS = 24;
 
-const DAY_OPTIONS = [6, 12, 18, 24].map((days) => ({ value: days, label: `${days} Days` }));
+const DURATIONS = [
+  { value: 6, label: '6 Days' },
+  { value: 12, label: '12 Days' },
+  { value: 18, label: '18 Days' },
+  { value: 24, label: '24 Days' },
+] as const;
 
-const REVEAL_STYLE_OPTIONS: ReadonlyArray<{ value: RevealStyle; label: string }> = [
-  { value: 'drifting', label: 'Drifting' },
-  { value: 'blizzard', label: 'Blizzard' },
-  { value: 'image', label: 'Image' },
-];
+type Duration = (typeof DURATIONS)[number]['value'];
 
 export function CreatePage() {
+  const headingId = useId();
   const nameId = useId();
-  const pickerLabelId = useId();
-  const year = useMemo(() => new Date().getFullYear(), []);
+  const daysLabelId = useId();
+  const titlesLabelId = useId();
+  const daysField = useRef<HTMLDivElement>(null);
 
   const [name, setName] = useState('');
-  const [days, setDays] = useState(24);
-  const [view, setView] = useState<DayPickerView>('calendar');
-  const [titles, setTitles] = useState<Record<number, string>>({});
+  const [days, setDays] = useState<Duration>(24);
+  // Titles for all 24 possible days; shortening the calendar hides, but keeps, the rest.
+  const [titles, setTitles] = useState<string[]>(() => Array<string>(MAX_DAYS).fill(''));
+  const [view, setView] = useState<TitlesView>('calendar');
   const [revealStyle, setRevealStyle] = useState<RevealStyle>('drifting');
-  const [copied, setCopied] = useState(false);
-  const copiedTimer = useRef<number | undefined>(undefined);
+  const [year] = useState(() => new Date().getFullYear());
 
-  useEffect(() => () => window.clearTimeout(copiedTimer.current), []);
+  const setTitle = (index: number, title: string) =>
+    setTitles((previous) => previous.map((t, i) => (i === index ? title : t)));
 
-  const nextRevealAt = useMemo(
-    () => getNextRevealAt(new Date(), mockCalendar.revealTime),
-    [],
-  );
-
-  const setTitle = (day: number, title: string) =>
-    setTitles((previous) => ({ ...previous, [day]: title }));
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => event.preventDefault();
-
-  // There is no backend yet, so sharing hands out the app's own link: the share
-  // sheet where the browser offers one, otherwise a copy to the clipboard.
-  const handleShare = async () => {
-    const url = window.location.href.split('#')[0];
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: name.trim() || 'Movie Advent Calendar', url });
-        return;
-      } catch (error) {
-        if (error instanceof DOMException && error.name === 'AbortError') return;
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      window.clearTimeout(copiedTimer.current);
-      copiedTimer.current = window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Clipboard unavailable (e.g. no permission); nothing else to fall back to.
-    }
+  const handleShare = () => {
+    // Sharing has its own design (recipient email + note) and isn't built yet.
   };
 
   return (
     <div className={styles.page}>
-      <NavBar active="create" />
+      <div className={styles.header}>
+        <SiteHeader />
+      </div>
 
-      <header className={styles.header}>
-        <Wordmark />
-        <Countdown target={nextRevealAt} label="Time until the next reveal" />
-      </header>
+      <main className={styles.content}>
+        <section className={styles.builder} aria-labelledby={headingId}>
+          <h2 id={headingId} className="visually-hidden">
+            Create a calendar
+          </h2>
+          <p className={styles.intro}>
+            Hide a movie behind each day. Your friend opens one a day and guesses the title.
+          </p>
 
-      <main className={styles.main}>
-        <h2 className="visually-hidden">Create a calendar</h2>
-        <form className={styles.form} aria-label="Create a calendar" onSubmit={handleSubmit}>
-          <section className={`${styles.section} ${styles.setup}`}>
-            <div className={styles.fields}>
-              <p className={styles.intro}>
-                Hide a movie behind each day. Your friend opens one a day and guesses the title.
-              </p>
-
-              <div className={styles.field}>
-                <label className={text.fieldLabel} htmlFor={nameId}>
-                  Calendar Name
-                </label>
-                <InputField
-                  id={nameId}
-                  placeholder="e.g. Winter movies for Ana"
-                  autoComplete="off"
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                />
-              </div>
-
-              <SegmentedControl
-                legend="Days"
-                name="days"
-                options={DAY_OPTIONS}
-                value={days}
-                onChange={setDays}
-                segmentWidth={78}
-              />
-            </div>
-
-            <div className={styles.field} role="group" aria-labelledby={pickerLabelId}>
-              <div className={styles.pickerHeader}>
-                <p id={pickerLabelId} className={text.fieldLabel}>
-                  Pick a day to add its movie
-                </p>
-                <ViewToggle value={view} onChange={setView} />
-              </div>
-
-              {view === 'calendar' ? (
-                <MonthCalendar
-                  year={year}
-                  month={DECEMBER}
-                  days={days}
-                  titles={titles}
-                  onTitleChange={setTitle}
-                />
-              ) : (
-                <DayList
-                  year={year}
-                  month={DECEMBER}
-                  days={days}
-                  titles={titles}
-                  onTitleChange={setTitle}
-                />
-              )}
-            </div>
-          </section>
-
-          <section className={`${styles.section} ${styles.finish}`}>
-            <SegmentedControl
-              legend="Select reveal style"
-              name="reveal-style"
-              options={REVEAL_STYLE_OPTIONS}
-              value={revealStyle}
-              onChange={setRevealStyle}
-              segmentWidth={86}
+          <div className={`${styles.field} ${styles.nameField}`}>
+            <label htmlFor={nameId} className={styles.label}>
+              Calendar Name
+            </label>
+            <ListNameField
+              id={nameId}
+              value={name}
+              onChange={setName}
+              // Enter confirms the name and moves on to the Days picker.
+              onEnter={() => daysField.current?.querySelector<HTMLInputElement>('input:checked')?.focus()}
             />
+          </div>
 
-            <div className={styles.preview}>
-              <div className={styles.previewImage}>
-                <TodaysReveal
-                  image={{ ...mockCalendar.today.reveal, alt: 'Preview of how a day is revealed' }}
-                />
-              </div>
+          <div className={`${styles.field} ${styles.daysField}`} ref={daysField}>
+            <p id={daysLabelId} className={styles.label}>
+              Days
+            </p>
+            <SegmentedControl fill labelledBy={daysLabelId} options={DURATIONS} value={days} onChange={setDays} />
+          </div>
+
+          <div className={styles.titles}>
+            <div className={styles.titlesHeader}>
+              <p id={titlesLabelId} className={styles.label}>
+                Pick a day to add its movie
+              </p>
+              <ViewToggle value={view} onChange={setView} />
             </div>
 
-            <button type="button" className={styles.share} onClick={handleShare}>
-              {copied ? 'Link copied' : 'Share the Calendar'}
-            </button>
-            <p className="visually-hidden" aria-live="polite">
-              {copied ? 'Link copied to the clipboard' : ''}
-            </p>
-          </section>
-        </form>
+            {view === 'calendar' ? (
+              <TitleCalendar year={year} days={days} titles={titles} onChangeTitle={setTitle} />
+            ) : (
+              <TitleList
+                days={days}
+                titles={titles}
+                onChangeTitle={setTitle}
+              />
+            )}
+          </div>
+        </section>
+
+        <PreviewPanel
+          image={mockCalendar.today.reveal}
+          revealStyle={revealStyle}
+          onRevealStyleChange={setRevealStyle}
+          onShare={handleShare}
+        />
       </main>
     </div>
   );

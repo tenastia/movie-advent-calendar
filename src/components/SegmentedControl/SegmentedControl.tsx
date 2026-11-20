@@ -1,45 +1,52 @@
-import type { CSSProperties } from 'react';
-import text from '../../styles/text.module.css';
+import { useId } from 'react';
 import styles from './SegmentedControl.module.css';
 
 interface SegmentedControlProps<T extends string | number> {
-  legend: string;
-  /** Shared `name` of the radio inputs. */
-  name: string;
   options: ReadonlyArray<{ value: T; label: string }>;
   value: T;
   onChange: (value: T) => void;
-  /** Width of each segment in the design, in px. Segments shrink to fit narrower screens. */
-  segmentWidth: number;
+  /** id of the visible element that labels the group. */
+  labelledBy?: string;
+  /** Accessible name when there is no visible label. */
+  label?: string;
+  /** Stretch to the container's width, splitting it into equal segments. */
+  fill?: boolean;
 }
 
-/** Figma `SegmentedButton` row: a single-choice radio group styled as joined pills. */
+/** Figma `SegmentedButton` row, built on native radio inputs (arrow keys, form semantics). */
 export function SegmentedControl<T extends string | number>({
-  legend,
-  name,
   options,
   value,
   onChange,
-  segmentWidth,
+  labelledBy,
+  label,
+  fill = false,
 }: SegmentedControlProps<T>) {
+  const name = useId();
+
   return (
-    <fieldset className={styles.fieldset}>
-      <legend className={`${text.fieldLabel} ${styles.legend}`}>{legend}</legend>
-      <div className={styles.segments} style={{ '--segment-width': `${segmentWidth}px` } as CSSProperties}>
-        {options.map((option) => (
-          <label key={option.value} className={styles.segment}>
+    <div
+      className={`${styles.group} ${fill ? styles.fill : ''}`}
+      role="radiogroup"
+      aria-labelledby={labelledBy}
+      aria-label={label}
+    >
+      {options.map((option) => {
+        const checked = option.value === value;
+        return (
+          <label key={option.value} className={`${styles.option} ${checked ? styles.selected : ''}`}>
             <input
               className={styles.radio}
               type="radio"
               name={name}
               value={option.value}
-              checked={option.value === value}
+              checked={checked}
               onChange={() => onChange(option.value)}
             />
             {option.label}
           </label>
-        ))}
-      </div>
-    </fieldset>
+        );
+      })}
+    </div>
   );
 }

@@ -1,64 +1,49 @@
 /*
- * Follows the 402px-wide "MobilCalendar" / "MobilList" Figma frames: a single
- * 358px column, centred. Wider screens keep the same column.
+ * Follows the 1440×880 Figma frame: at an 880px-tall viewport the header and
+ * the two panels land on their design coordinates; taller viewports centre them.
  */
 .page {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   min-height: 100vh;
   min-height: 100dvh;
-  padding: 20.5px 22px 69px;
+  /* Side padding keeps the panels clear of the fixed nav rail. */
+  padding: 20.5px 84px 74.5px;
 }
 
 .header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 13px;
-  margin-bottom: 24.5px;
+  margin-bottom: 31px;
 }
 
-.main,
-.form {
+.content {
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
   width: 100%;
-  max-width: 358px;
+  max-width: 1272px;
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
+.content > :last-child {
+  flex: 1 1 0;
 }
 
-.section {
+.builder {
   display: flex;
+  flex: 0 0 415px;
   flex-direction: column;
-  padding: 32px 24px;
+  min-width: 0;
+  padding: 32px 24px 24px;
   background: var(--colour-background-card-background);
   border-radius: var(--border-radius-section);
-}
-
-.setup {
-  gap: 36px;
-  padding-bottom: 24px;
-}
-
-.finish {
-  gap: 26px;
-}
-
-.fields {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
 }
 
 .intro {
   margin: 0;
   color: rgba(255, 255, 255, 0.8);
-  font-weight: var(--font-weight-regular);
-  font-size: 18px;
+  font-weight: var(--font-weight-light);
+  font-size: 20px;
   line-height: 28px;
 }
 
@@ -68,62 +53,48 @@
   gap: 12px;
 }
 
-.pickerHeader {
+.nameField,
+.daysField {
+  margin-top: 24px;
+}
+
+.label {
+  margin: 0;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-light);
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 36px;
+}
+
+.titlesHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  height: 26px;
 }
 
-.preview {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 197px;
-  background: rgba(217, 217, 217, 0.05);
-  border-radius: 16px;
-}
+/* Stack the panels once they no longer fit side by side. */
+@media (max-width: 1099px) {
+  .content {
+    flex-direction: column;
+    max-width: 843px;
+  }
 
-.previewImage {
-  width: 144px;
-}
-
-.share {
-  width: 100%;
-  height: 44px;
-  margin: 0;
-  padding: 8px 16px;
-  background: #d1d1d1;
-  border: 1px solid var(--colour-icon-icon-action);
-  border-radius: 46px;
-  color: var(--colour-background-background);
-  font-weight: var(--font-weight-regular);
-  font-size: 14px;
-  line-height: 17px;
-  cursor: pointer;
-  transition: background-color 120ms ease-out;
-}
-
-@media (hover: hover) {
-  .share:hover {
-    background: #e2e2e2;
+  .builder {
+    flex-basis: auto;
   }
 }
 
-.share:focus-visible {
-  outline: 2px solid var(--colour-border-input-focus);
-  outline-offset: 2px;
-}
-
-/* Phones: the nav bar sits at the bottom, so leave room to scroll content clear of it. */
-@media (max-width: 640px) {
+/* Phones: no side rail to clear, but the floating nav bar sits over the bottom. */
+@media (max-width: 639px) {
   .page {
-    padding-bottom: 114px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .share {
-    transition: none;
+    padding: 20.5px 16px 120px;
   }
 }

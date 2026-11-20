@@ -21,7 +21,7 @@
   border: 1px solid var(--colour-border-input-action);
   border-radius: var(--border-radius-input-field);
   color: rgba(255, 255, 255, 0.9);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-light);
   font-size: 14px;
   line-height: 17px;
   outline: none;
@@ -84,7 +84,7 @@
 .attempts {
   margin: 0;
   color: var(--colour-typography-input-text);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-light);
   font-size: 12px;
   line-height: 14px;
   letter-spacing: 0.12px;

@@ -1,58 +1,107 @@
 /*
- * Vertical rhythm follows the 1440×880 Figma frame: at an 880px-tall viewport
- * every block lands on its design coordinate; taller viewports centre the column.
+ * The header-to-guess-field column fills exactly one screen, so the tabs and the
+ * guess field are always in view. At 880px tall every block lands on its Figma
+ * coordinate; on other heights the reveal area (where the letters draw) takes
+ * the space that's left, and on shorter screens the gaps scale down with it
+ * (vh values = design px / 8.8).
  */
 .page {
   position: relative;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 560px;
+}
+
+.screen {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  min-height: 100dvh;
-  padding: 20.5px 24px 69px;
+  height: 100%;
+  padding: 20.5px 24px clamp(24px, 7.84vh, 69px);
 }
 
 .header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 13px;
-  margin-bottom: 38.5px;
+  flex: none;
+  margin-bottom: clamp(16px, 4.375vh, 38.5px);
 }
 
 .main {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   align-items: center;
   width: 100%;
+  min-height: 0;
 }
 
+/* The letters centre on this area. It's 441px tall on an 880px screen. */
+.reveal {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+}
+
+/* The reveal frame (or the static image without WebGL) scales to fit, keeping its shape. */
+.reveal > figure {
+  width: auto;
+  height: min(100%, 441px);
+  max-width: 100%;
+  aspect-ratio: 638 / 441;
+}
+
+/* Tabs sit at y 668 and the guess field at 741 in the 880px-tall frame. */
 .tabs {
-  margin-top: 18px;
-}
-
-.progress {
-  margin-top: 58px;
+  flex: none;
+  margin-top: clamp(16px, 8.64vh, 76px);
 }
 
 .guess {
   display: flex;
+  flex: none;
   justify-content: center;
   width: 100%;
-  margin-top: 35px;
+  margin-top: clamp(16px, 4.77vh, 42px);
+}
+
+/* Below this width the card pile moves under the first screen, so the page scrolls to it. */
+@media (max-width: 1279px) {
+  .page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    min-height: 0;
+    padding-bottom: 69px;
+  }
+
+  .screen {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 560px;
+  }
 }
 
 /* Keep content clear of the fixed nav rail on narrow screens. */
 @media (max-width: 900px) {
-  .page {
+  .screen {
     padding-inline: 84px 16px;
   }
 }
 
-/* Phones: the nav moves to a bottom bar, so clear it at the bottom instead. */
-@media (max-width: 640px) {
+/*
+ * Phones: the nav floats at the bottom instead (see NavBar), so the side gutter
+ * goes and the guess field ends 29px above the bar (Figma 402px "MainScreen").
+ */
+@media (max-width: 639px) {
   .page {
-    padding: 20.5px 16px 114px;
+    padding-bottom: 120px;
+  }
+
+  .screen {
+    padding: 20.5px 22px 116px;
   }
 }

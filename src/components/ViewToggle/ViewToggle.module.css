@@ -5,29 +5,44 @@
 }
 
 .button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative;
+  display: grid;
+  place-items: center;
   width: 26px;
   height: 26px;
   margin: 0;
   padding: 0;
-  background: transparent;
+  background: none;
   border: 0;
   border-radius: 50%;
   cursor: pointer;
-  transition: background-color 120ms ease-out;
 }
 
-/* IconCalendar's "Ellipse 4": 5% white disc behind the selected view. */
-.button[aria-pressed='true'] {
+.glyph {
+  position: relative;
+  display: block;
+  /*
+   * The exported glyphs are filled #4d4d4d (icon-inactive); the design now draws
+   * them in #a0a0a0 (icon-action). 77 × 2.078 = 160.
+   */
+  filter: brightness(2.078);
+}
+
+/* Selection circle: the 5%-white ellipse from the Figma icon export, filling the 26px button. */
+.button::before {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
   background: rgba(255, 255, 255, 0.05);
+  opacity: 0;
+  content: '';
+  transition: opacity 120ms ease-out;
 }
 
-@media (hover: hover) {
-  .button[aria-pressed='false']:hover {
-    background: rgba(255, 255, 255, 0.03);
-  }
+/* Selected and hovered buttons show the same circle. */
+.button[aria-pressed='true']::before,
+.button:hover::before {
+  opacity: 1;
 }
 
 .button:focus-visible {
@@ -36,7 +51,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .button {
+  .button::before {
     transition: none;
   }
 }

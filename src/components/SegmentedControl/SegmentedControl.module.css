@@ -1,81 +1,74 @@
-.fieldset {
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-/* Floated so the legend lays out like a normal block above the segments. */
-.legend {
-  float: left;
-  width: 100%;
-  margin-bottom: 12px;
-  padding: 0;
-}
-
-.segments {
+.group {
   display: flex;
-  clear: both;
+  align-items: center;
 }
 
-.segment {
+.option {
   position: relative;
   display: flex;
-  flex: 0 1 var(--segment-width);
   align-items: center;
   justify-content: center;
-  min-width: 0;
-  height: 37px;
-  /* Neighbours overlap by 1px so adjacent borders read as a single line. */
-  margin-right: -1px;
-  padding: 0 4px;
+  width: 86px;
+  /* 1px border + 9px padding + 17px line = the design's 37px height. */
+  padding: 9px 16px;
   background: var(--colour-border-card-border);
   border: 1px solid #606060;
   color: #fff;
+  font-family: var(--font-inter);
   font-weight: var(--font-weight-medium);
   font-size: 14px;
   line-height: 17px;
   white-space: nowrap;
   cursor: pointer;
+  user-select: none;
   transition: background-color 120ms ease-out;
 }
 
-.segment:first-child {
+.fill {
+  width: 100%;
+}
+
+.fill .option {
+  flex: 1 1 0;
+  width: auto;
+}
+
+/* Adjacent segments share a border. */
+.option + .option {
+  margin-left: -1px;
+}
+
+.option:first-child {
   border-radius: 36px 0 0 36px;
 }
 
-.segment:last-child {
-  margin-right: 0;
+.option:last-child {
   border-radius: 0 36px 36px 0;
 }
 
-.segment:has(.radio:checked) {
+.option:hover {
+  background: #333;
+}
+
+.selected,
+.selected:hover {
   background: #525252;
 }
 
-@media (hover: hover) {
-  .segment:hover:not(:has(.radio:checked)) {
-    background: #333;
-  }
-}
-
-.segment:has(.radio:focus-visible) {
+.option:has(.radio:focus-visible) {
   z-index: 1;
   outline: 2px solid var(--colour-border-input-focus);
   outline-offset: 2px;
 }
 
-/* Covers the segment so the whole pill is the hit target; invisible. */
 .radio {
   position: absolute;
-  inset: 0;
-  margin: 0;
   opacity: 0;
-  cursor: pointer;
+  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .segment {
+  .option {
     transition: none;
   }
 }

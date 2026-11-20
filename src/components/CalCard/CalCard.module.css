@@ -39,7 +39,7 @@
   width: 100%;
   margin: 0;
   overflow: hidden;
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-light);
   font-size: 15px;
   line-height: 18px;
   -webkit-box-orient: vertical;

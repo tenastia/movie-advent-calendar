@@ -2,10 +2,7 @@
 
 A daily movie-guessing advent calendar. Each day reveals a puzzle image; you get a few attempts to guess the movie.
 
-Built from the Figma designs with Vite, React and TypeScript:
-
-- [Home page](https://www.figma.com/design/HKCrv875zRzE964kHd5j5s/Movie-Advent-Calendar?node-id=1-6) (desktop)
-- [Create page](https://www.figma.com/design/DUq5WEpHzaPWA39dxM0Oaz/Portfolio-2025-bam?node-id=6683-14519) (mobile; calendar and list views)
+Built from the [Figma design](https://www.figma.com/design/HKCrv875zRzE964kHd5j5s/Movie-Advent-Calendar?node-id=1-6) with Vite, React and TypeScript.
 
 ## Getting started
 
@@ -25,20 +22,39 @@ npm run dev
 ## Project layout
 
 ```
+lab/index.html     Entry for the motion lab page (/lab/)
 src/
   assets/          Images and icons exported from Figma
   components/      UI building blocks (one folder per component, CSS Modules)
   data/            Types and mock calendar data
-  lib/             Framework-free helpers (countdown maths, calendar grid, routes)
-  pages/           One folder per page (HomePage, CreatePage)
+  hooks/           Shared React hooks (media queries)
+  lab/             The motion lab UI (sliders, transport, recorder)
+  lib/             Framework-free helpers (countdown and carousel-loop maths)
+  motion/          The letter engine, shaders and presets
+  pages/HomePage/  The home page
   styles/          Design tokens (mirrors Figma variables) and global styles
 ```
 
-Pages are picked from the URL hash (`#home`, `#create`), so the static build runs on any host
-without server rewrites. Below 640px wide the nav rail becomes a bar floating at the bottom of the screen.
-
 Styling uses CSS Modules plus CSS custom properties. `src/styles/tokens.css` mirrors the Figma
 variables (`Colour/Border/nav-border` → `--colour-border-nav-border`), so prefer a token over a raw value.
+
+## Letter motion
+
+Today's number is drawn by a WebGL letter engine (`src/motion`, Three.js via React Three Fiber) in a
+full-viewport canvas behind the page, centred on the reveal frame. It runs on the visitor's clock:
+
+| Local time    | What happens                                             |
+| ------------- | -------------------------------------------------------- |
+| 00:00 → 06:00 | The number decays letter by letter                       |
+| 06:00 → 12:00 | Letters drift back one by one and assemble the title     |
+| 12:00 → 24:00 | The title holds; at midnight the next number fades in    |
+
+- **Motion lab:** `/lab/` tunes every parameter live. "Copy preset" puts the JSON on the clipboard; save
+  it as `src/motion/presets/<name>.json`.
+- **Which preset the calendar uses:** `CALENDAR_PRESET_KEY` in `src/motion/presets/index.ts`.
+- **Checking any moment:** `?time=03:00` starts the day at 03:00; `?speed=720` plays the whole day in
+  2 minutes. Both work together.
+- Browsers without WebGL see the static image from `src/assets/reveal`.
 
 ## Fonts
 
@@ -46,15 +62,23 @@ variables (`Colour/Border/nav-border` → `--colour-border-nav-border`), so pref
   **Inter**, which is self-hosted via `@fontsource`.
 - **Monsieur La Doulaise** (the "Advent" script) is self-hosted via `@fontsource`.
 
+## Pages
+
+| Route        | Page                                                                                      |
+| ------------ | ----------------------------------------------------------------------------------------- |
+| `/`          | Home: today's reveal, guessing, and a deck of past days to flip through                  |
+| `/calendars` | Calendars: pick which calendar the home page shows (opens over the home page)            |
+| `/create`    | Create a calendar: name, length, a movie title per day (calendar or list view), preview |
+
+Routing uses React Router. Netlify serves `index.html` for every path (`public/_redirects`), so deep links work.
+
 ## Current state
 
-Both pages run against mock data in `src/data/mockCalendar.ts`; there is no backend yet.
+Pages run on mock data (`src/data/mockCalendar.ts`) and local state. Not built yet:
 
 - Guesses only count down the remaining attempts. Nothing checks them against an answer yet.
-- The countdown shows the time until the next daily reveal at 19:00 local time.
-- Like the desktop Create page, a calendar always ends on 24 December: 6 days covers 19–24 December,
-  24 days covers 1–24 December. Earlier days are dimmed.
-- The Create page keeps the draft (name, days, titles, reveal style) in memory only. "Share the Calendar"
-  opens the share sheet (or copies the link) for the app itself, not for a saved calendar.
-- The reveal-style preview shows the same artwork for every style.
-- The "Calendars" nav link and the "Other Calendars" tab don't have pages yet.
+- Create page: "Share the Calendar" does nothing yet, the preview always shows the sample reveal, and
+  the reveal styles (Drifting / Blizzard / Image) can be selected but don't change the preview.
+  A draft is lost on reload.
+- Every calendar reuses the one reveal image there is so far, and the calendar you pick is forgotten
+  on reload.

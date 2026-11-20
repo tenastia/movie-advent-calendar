@@ -1,36 +1,53 @@
-import viewCalendar from '../../assets/create/view-calendar.svg';
-import viewList from '../../assets/create/view-list.svg';
+// Kept as separate files (not inlined) so <use> can reference their glyph layers by id.
+import iconCalendar from '../../assets/ui/icon-calendar.svg?no-inline';
+import iconList from '../../assets/ui/icon-list.svg?no-inline';
 import styles from './ViewToggle.module.css';
 
-export type DayPickerView = 'calendar' | 'list';
+export type TitlesView = 'calendar' | 'list';
+
+/**
+ * The Figma icons are exported as glyph + (for the selected one) a 5% white
+ * circle. Each button renders the glyph layer from the designed SVG by id and
+ * draws that circle in CSS, so either view can be shown as selected or hovered.
+ *
+ * `viewBox` crops the export to the glyph's own outline, which is then drawn at
+ * the size the design specifies (calendar 14×14; list 14×11, 0.5px low).
+ */
+const VIEWS = [
+  { id: 'calendar', label: 'Calendar view', src: iconCalendar, layer: 'art', viewBox: '6 6.5 12 12', w: 14, h: 14, nudge: 0 },
+  { id: 'list', label: 'List view', src: iconList, layer: 'Vector', viewBox: '6 7.5 12 10', w: 14, h: 11, nudge: 0.5 },
+] as const;
 
 interface ViewToggleProps {
-  value: DayPickerView;
-  onChange: (value: DayPickerView) => void;
+  value: TitlesView;
+  onChange: (view: TitlesView) => void;
 }
 
-/** The IconCalendar / IconList pair; the selected view gets the round highlight. */
 export function ViewToggle({ value, onChange }: ViewToggleProps) {
   return (
-    <div className={styles.toggle} role="group" aria-label="Day picker view">
-      <button
-        type="button"
-        className={styles.button}
-        aria-label="Calendar view"
-        aria-pressed={value === 'calendar'}
-        onClick={() => onChange('calendar')}
-      >
-        <img src={viewCalendar} width={14} height={14} alt="" />
-      </button>
-      <button
-        type="button"
-        className={styles.button}
-        aria-label="List view"
-        aria-pressed={value === 'list'}
-        onClick={() => onChange('list')}
-      >
-        <img src={viewList} width={26} height={26} alt="" />
-      </button>
+    <div className={styles.toggle} role="group" aria-label="How to add titles">
+      {VIEWS.map((view) => (
+        <button
+          key={view.id}
+          type="button"
+          className={styles.button}
+          aria-label={view.label}
+          aria-pressed={value === view.id}
+          onClick={() => onChange(view.id)}
+        >
+          <svg
+            className={styles.glyph}
+            width={view.w}
+            height={view.h}
+            viewBox={view.viewBox}
+            preserveAspectRatio="none"
+            style={{ top: view.nudge }}
+            aria-hidden="true"
+          >
+            <use href={`${view.src}#${view.layer}`} />
+          </svg>
+        </button>
+      ))}
     </div>
   );
 }

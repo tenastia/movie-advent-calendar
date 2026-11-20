@@ -1,0 +1,9 @@
+# Netlify must build the app and publish Vite's output. Serving the repo as-is
+# loads /src/main.tsx directly, which browsers refuse to run (blank page).
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Vite 8 needs Node ^20.19 or >=22.12.
+  NODE_VERSION = "22"

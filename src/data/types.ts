@@ -18,16 +18,22 @@ export interface RevealImage {
 }
 
 export interface Calendar {
-  owner: string;
+  id: string;
+  name: string;
+  description: string;
+  /** Number of days (movies), counting down to Christmas Eve. */
+  length: number;
   /** Daily reveal time, "HH:MM" in local time. */
   revealTime: string;
   attemptsPerDay: number;
   today: {
     day: number;
+    /** Today's movie. Mock only: the answer must come from the server once there is a backend. */
+    title: string;
+    /** Tomorrow's movie; its letters form the number that fades in at midnight. */
+    nextTitle?: string;
     reveal: RevealImage;
   };
   /** Days already revealed, oldest first. */
   days: CalendarDay[];
 }
-
-export type RevealStyle = 'drifting' | 'blizzard' | 'image';
