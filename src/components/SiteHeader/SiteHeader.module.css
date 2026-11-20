@@ -4,3 +4,11 @@
   align-items: center;
   gap: 13px;
 }
+
+/* Phones: the countdown stays above the Calendars overlay with the wordmark (Figma phone "Calendars"). */
+@media (max-width: 639px) {
+  .countdown {
+    position: relative;
+    z-index: var(--z-chrome);
+  }
+}

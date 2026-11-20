@@ -81,7 +81,8 @@
 
 /* "Currently Showing" pill on the calendar open on the home page. */
 .showing {
-  padding: 0 6px;
+  /* Figma: 1/6/2/6 padding with the 1px stroke drawn inside, so 21px tall. */
+  padding: 0 5px 1px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 12px;
   font-weight: var(--font-weight-light);
