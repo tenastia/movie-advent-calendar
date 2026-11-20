@@ -23,7 +23,7 @@
   justify-content: center;
   height: 24px;
   color: rgba(255, 255, 255, 0.4);
-  font-weight: var(--font-weight-light);
+  font-weight: var(--font-weight-regular);
   font-size: 11px;
   line-height: 13px;
   opacity: 0.4;
@@ -71,7 +71,6 @@ button.day:focus-visible {
 
 /* Days outside the month or past the chosen length. */
 .dim {
-  font-weight: var(--font-weight-light);
   opacity: 0.4;
 }
 
