@@ -85,7 +85,7 @@
   border: 1px solid var(--colour-icon-icon-action);
   border-radius: 12px;
   color: var(--colour-icon-icon-action);
-  font-weight: var(--font-weight-light);
+  font-weight: var(--font-weight-regular);
   font-size: 12px;
   line-height: 18px;
   white-space: nowrap;
@@ -97,7 +97,7 @@
   margin: 0;
   overflow: hidden;
   color: var(--colour-typography-movie-current);
-  font-weight: var(--font-weight-light);
+  font-weight: var(--font-weight-regular);
   font-size: 15px;
   line-height: 18px;
   overflow-wrap: anywhere;

@@ -12,7 +12,7 @@
 .month {
   margin: 0;
   color: var(--text-secondary);
-  font-weight: var(--font-weight-light);
+  font-weight: var(--font-weight-regular);
   font-size: 14px;
   line-height: 17px;
 }
@@ -28,7 +28,7 @@
 .weekdays {
   color: rgba(255, 255, 255, 0.4);
   opacity: 0.4;
-  font-weight: var(--font-weight-light);
+  font-weight: var(--font-weight-regular);
   font-size: 11px;
   line-height: 13px;
 }
@@ -54,7 +54,7 @@
   width: 41px;
   height: 32px;
   color: rgba(255, 255, 255, 0.4);
-  font-weight: var(--font-weight-light);
+  font-weight: var(--font-weight-regular);
   font-size: 13px;
   line-height: 16px;
 }
@@ -164,7 +164,7 @@
   border: 1px solid var(--colour-border-input-action);
   border-radius: var(--border-radius-input-field);
   color: rgba(255, 255, 255, 0.9);
-  font-weight: var(--font-weight-light);
+  font-weight: var(--font-weight-regular);
   font-size: 14px;
   line-height: 17px;
   outline: none;
