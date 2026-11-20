@@ -76,6 +76,40 @@
   outline-offset: 3px;
 }
 
+/*
+ * Phones (Figma 402px "Frame 23"): picker, then a 197px-tall preview, then a
+ * full-width Share button without the glow, 26px apart.
+ */
+@media (max-width: 639px) {
+  .panel {
+    gap: 26px;
+  }
+
+  /* Let the picker, stage and button order themselves within the panel. */
+  .header {
+    display: contents;
+  }
+
+  .stage {
+    flex: none;
+    order: 1;
+    height: 197px;
+    min-height: 0;
+  }
+
+  .share {
+    order: 2;
+    width: 100%;
+    border-color: var(--colour-icon-icon-action);
+    box-shadow: none;
+  }
+
+  .share:hover {
+    border-color: var(--colour-icon-icon-action);
+    box-shadow: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .share {
     transition: none;

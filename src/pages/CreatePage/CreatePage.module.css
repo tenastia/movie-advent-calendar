@@ -92,9 +92,27 @@
   }
 }
 
-/* Phones: no side rail to clear, but the floating nav bar sits over the bottom. */
+/*
+ * Phones (Figma 402px "MobilCalendar" / "MobilList"): one 358px column with
+ * 22px gutters, the first panel at y 137, 22px between the panels. The bottom
+ * padding lets the content scroll clear of the floating nav bar.
+ */
 @media (max-width: 639px) {
   .page {
-    padding: 20.5px 16px 120px;
+    justify-content: flex-start;
+    padding: 20.5px 22px 114px;
+  }
+
+  .header {
+    margin-bottom: 24.5px;
+  }
+
+  .content {
+    gap: 22px;
+    max-width: 358px;
+  }
+
+  .intro {
+    font-size: 18px;
   }
 }
