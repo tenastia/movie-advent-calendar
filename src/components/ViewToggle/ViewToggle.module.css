@@ -1,0 +1,42 @@
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 120ms ease-out;
+}
+
+/* IconCalendar's "Ellipse 4": 5% white disc behind the selected view. */
+.button[aria-pressed='true'] {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+@media (hover: hover) {
+  .button[aria-pressed='false']:hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--colour-border-input-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}

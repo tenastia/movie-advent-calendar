@@ -29,3 +29,5 @@ export interface Calendar {
   /** Days already revealed, oldest first. */
   days: CalendarDay[];
 }
+
+export type RevealStyle = 'drifting' | 'blizzard' | 'image';

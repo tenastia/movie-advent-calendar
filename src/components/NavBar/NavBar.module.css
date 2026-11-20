@@ -48,6 +48,21 @@
   opacity: 1;
 }
 
+/* Phones: a horizontal bar floating at the bottom of the screen (Figma mobile "NavBar"). */
+@media (max-width: 640px) {
+  .nav {
+    top: auto;
+    bottom: 27px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 1px 8px rgba(255, 255, 255, 0.05);
+  }
+
+  .list {
+    flex-direction: row;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hover {
     transition: none;

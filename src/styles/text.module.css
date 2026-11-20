@@ -1,0 +1,10 @@
+/* Text styles shared across components (Figma text styles, not variables). */
+
+/* "Calendar Name", "Days", "Select reveal style"… */
+.fieldLabel {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: var(--font-weight-light);
+  font-size: 14px;
+  line-height: 17px;
+}

@@ -1,0 +1,129 @@
+/*
+ * Follows the 402px-wide "MobilCalendar" / "MobilList" Figma frames: a single
+ * 358px column, centred. Wider screens keep the same column.
+ */
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 20.5px 22px 69px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 24.5px;
+}
+
+.main,
+.form {
+  width: 100%;
+  max-width: 358px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  padding: 32px 24px;
+  background: var(--colour-background-card-background);
+  border-radius: var(--border-radius-section);
+}
+
+.setup {
+  gap: 36px;
+  padding-bottom: 24px;
+}
+
+.finish {
+  gap: 26px;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.intro {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: var(--font-weight-light);
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pickerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 197px;
+  background: rgba(217, 217, 217, 0.05);
+  border-radius: 16px;
+}
+
+.previewImage {
+  width: 144px;
+}
+
+.share {
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  padding: 8px 16px;
+  background: #d1d1d1;
+  border: 1px solid var(--colour-icon-icon-action);
+  border-radius: 46px;
+  color: var(--colour-background-background);
+  font-weight: var(--font-weight-regular);
+  font-size: 14px;
+  line-height: 17px;
+  cursor: pointer;
+  transition: background-color 120ms ease-out;
+}
+
+@media (hover: hover) {
+  .share:hover {
+    background: #e2e2e2;
+  }
+}
+
+.share:focus-visible {
+  outline: 2px solid var(--colour-border-input-focus);
+  outline-offset: 2px;
+}
+
+/* Phones: the nav bar sits at the bottom, so leave room to scroll content clear of it. */
+@media (max-width: 640px) {
+  .page {
+    padding-bottom: 114px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .share {
+    transition: none;
+  }
+}

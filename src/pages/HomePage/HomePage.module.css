@@ -49,3 +49,10 @@
     padding-inline: 84px 16px;
   }
 }
+
+/* Phones: the nav moves to a bottom bar, so clear it at the bottom instead. */
+@media (max-width: 640px) {
+  .page {
+    padding: 20.5px 16px 114px;
+  }
+}

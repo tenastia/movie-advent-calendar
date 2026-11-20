@@ -1,0 +1,81 @@
+.fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Floated so the legend lays out like a normal block above the segments. */
+.legend {
+  float: left;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 0;
+}
+
+.segments {
+  display: flex;
+  clear: both;
+}
+
+.segment {
+  position: relative;
+  display: flex;
+  flex: 0 1 var(--segment-width);
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  height: 37px;
+  /* Neighbours overlap by 1px so adjacent borders read as a single line. */
+  margin-right: -1px;
+  padding: 0 4px;
+  background: var(--colour-border-card-border);
+  border: 1px solid #606060;
+  color: #fff;
+  font-weight: var(--font-weight-medium);
+  font-size: 14px;
+  line-height: 17px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 120ms ease-out;
+}
+
+.segment:first-child {
+  border-radius: 36px 0 0 36px;
+}
+
+.segment:last-child {
+  margin-right: 0;
+  border-radius: 0 36px 36px 0;
+}
+
+.segment:has(.radio:checked) {
+  background: #525252;
+}
+
+@media (hover: hover) {
+  .segment:hover:not(:has(.radio:checked)) {
+    background: #333;
+  }
+}
+
+.segment:has(.radio:focus-visible) {
+  z-index: 1;
+  outline: 2px solid var(--colour-border-input-focus);
+  outline-offset: 2px;
+}
+
+/* Covers the segment so the whole pill is the hit target; invisible. */
+.radio {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .segment {
+    transition: none;
+  }
+}
