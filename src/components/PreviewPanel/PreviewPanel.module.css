@@ -106,8 +106,6 @@
   background: #d1d1d1;
   border: 1px solid #d1d1d1;
   border-radius: 46px;
-  /* Soft white glow, as in the design. */
-  box-shadow: 0 0 18px rgba(255, 255, 255, 0.65);
   color: #111;
   font-weight: var(--font-weight-regular);
   font-size: 14px;
@@ -116,14 +114,12 @@
   cursor: pointer;
   transition:
     background-color 120ms ease-out,
-    border-color 120ms ease-out,
-    box-shadow 120ms ease-out;
+    border-color 120ms ease-out;
 }
 
 .share:hover {
   background: #e6e6e6;
   border-color: #e6e6e6;
-  box-shadow: 0 0 22px rgba(255, 255, 255, 0.8);
 }
 
 .share:focus-visible {
@@ -133,7 +129,7 @@
 
 /*
  * Phones (Figma 402px "Frame 23"): picker, then a 197px-tall preview, then a
- * full-width Share button without the glow, 26px apart.
+ * full-width Share button, 26px apart.
  */
 @media (max-width: 639px) {
   .panel {
@@ -172,12 +168,10 @@
   .share {
     width: 100%;
     border-color: var(--colour-icon-icon-action);
-    box-shadow: none;
   }
 
   .share:hover {
     border-color: var(--colour-icon-icon-action);
-    box-shadow: none;
   }
 }
 
