@@ -26,9 +26,10 @@ export interface Calendar {
   /** Daily reveal time, "HH:MM" in local time. */
   revealTime: string;
   attemptsPerDay: number;
+  revealStyle: RevealStyle;
   today: {
     day: number;
-    /** Today's movie. Mock only: the answer must come from the server once there is a backend. */
+    /** Today's movie: the answer, and the letters the day's number is made of. */
     title: string;
     /** Tomorrow's movie; its letters form the number that fades in at midnight. */
     nextTitle?: string;
@@ -37,3 +38,6 @@ export interface Calendar {
   /** Days already revealed, oldest first. */
   days: CalendarDay[];
 }
+
+/** How a calendar reveals each day: letter motion presets, or a photo per day. */
+export type RevealStyle = 'drifting' | 'blizzard' | 'image';
