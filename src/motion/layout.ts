@@ -239,6 +239,8 @@ export interface TitleLayout {
   slotPos: Float32Array
   widthEm: number
   heightEm: number
+  /** Letter size and spacing relative to the number's own letters (1 = the number grid's pitch). */
+  scale: number
 }
 
 function wrapWords(words: string[], maxChars: number) {
@@ -266,26 +268,29 @@ function balancedWrap(words: string[], n: number) {
 }
 
 /**
- * Lay the title out on the number's own grid pitch: same glyph size, same
- * letter spacing, centred where the number was. It stays on one line when it
- * fits inside the number grid's width, otherwise wraps at spaces onto up to
- * `maxLines` lines (balanced). A single word wider than the grid stays whole.
+ * Lay the title out on the number's own grid pitch, `scale` times larger: same
+ * letter spacing relative to the glyph size, centred where the number was. It
+ * stays on one line when it fits inside the number grid's width, otherwise
+ * wraps at spaces onto up to `maxLines` lines (balanced). A single word wider
+ * than the grid stays whole.
  */
 export function layoutTitleGrid(
   text: string,
   field: Pick<LetterField, 'stepXem' | 'stepYem' | 'cols'>,
   maxLines: number,
   lineGapRows: number,
+  scale = 1,
 ): TitleLayout {
   const words = text.split(' ').filter(Boolean)
+  const cols = field.cols / scale
   let lines = [words.join(' ')]
   for (let n = 1; n <= Math.max(1, maxLines); n++) {
     lines = balancedWrap(words, n)
-    if (Math.max(...lines.map((l) => Array.from(l).length)) <= field.cols) break
+    if (Math.max(...lines.map((l) => Array.from(l).length)) <= cols) break
   }
 
-  const step = field.stepXem
-  const lineStep = field.stepYem * lineGapRows
+  const step = field.stepXem * scale
+  const lineStep = field.stepYem * lineGapRows * scale
   const pos: number[] = []
   let maxLen = 0
   lines.forEach((line, li) => {
@@ -301,6 +306,28 @@ export function layoutTitleGrid(
     lines,
     slotPos: new Float32Array(pos),
     widthEm: Math.max(1, maxLen) * step,
-    heightEm: (lines.length - 1) * lineStep + field.stepYem,
+    heightEm: (lines.length - 1) * lineStep + field.stepYem * scale,
+    scale,
   }
+}
+
+/**
+ * The title at the largest scale, up to `maxScale`, at which it fits inside the
+ * number's footprint (its width and height), wrapping onto more lines as it
+ * grows. A title too long to fit even at the number's own letter size keeps
+ * that size (scale 1), as before.
+ */
+export function fitTitleGrid(
+  text: string,
+  field: Pick<LetterField, 'stepXem' | 'stepYem' | 'cols' | 'numberWidthEm' | 'numberHeightEm'>,
+  maxLines: number,
+  lineGapRows: number,
+  maxScale: number,
+): TitleLayout {
+  const fits = (t: TitleLayout) => t.widthEm <= field.numberWidthEm + 1e-6 && t.heightEm <= field.numberHeightEm + 1e-6
+  for (let scale = Math.max(1, maxScale); scale > 1; scale *= 0.97) {
+    const layout = layoutTitleGrid(text, field, maxLines, lineGapRows, scale)
+    if (fits(layout)) return layout
+  }
+  return layoutTitleGrid(text, field, maxLines, lineGapRows, 1)
 }
