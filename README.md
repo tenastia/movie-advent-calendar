@@ -113,7 +113,7 @@ a leading "The" don't matter; numbers must match; longer titles forgive a typo) 
 For testing, add to the URL:
 
 - `?day=15` to show any December day, or `?day=0` for before 1 December. Before a calendar's first day
-  (1 December, or the 13th for a 12-day calendar) it hasn't started: letters of "movie advent calendar
+  (1 December, or the 13th for a 12-day calendar) it hasn't started: letters of "MOVIE ADVENT CALENDAR
   2026" snow down the screen (`src/components/Snowfall`) and the page says when it starts.
 - `?reset` to forget every guess made in this browser
 - `?time=` / `?speed=` for the letter motion (see above)
