@@ -1,12 +1,13 @@
 import { useId, useRef, useState } from 'react';
 import { ListNameField } from '../../components/ListNameField/ListNameField';
-import { PreviewPanel, type RevealStyle } from '../../components/PreviewPanel/PreviewPanel';
+import { PreviewPanel } from '../../components/PreviewPanel/PreviewPanel';
+import type { RevealStyle } from '../../data/types';
 import { SegmentedControl } from '../../components/SegmentedControl/SegmentedControl';
 import { SiteHeader } from '../../components/SiteHeader/SiteHeader';
 import { TitleCalendar } from '../../components/TitleCalendar/TitleCalendar';
 import { TitleList } from '../../components/TitleList/TitleList';
 import { ViewToggle, type TitlesView } from '../../components/ViewToggle/ViewToggle';
-import { mockCalendar } from '../../data/mockCalendar';
+import { sampleReveal } from '../../data/sampleReveal';
 import styles from './CreatePage.module.css';
 
 const MAX_DAYS = 24;
@@ -98,7 +99,7 @@ export function CreatePage() {
         </section>
 
         <PreviewPanel
-          image={mockCalendar.today.reveal}
+          image={sampleReveal}
           revealStyle={revealStyle}
           onRevealStyleChange={setRevealStyle}
           onShare={handleShare}
