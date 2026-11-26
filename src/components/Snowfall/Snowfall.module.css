@@ -1,0 +1,9 @@
+/* Behind every part of the page, like the letter motion's canvas. */
+.snow {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}

@@ -2,7 +2,7 @@
   position: fixed;
   top: 50%;
   left: 14px;
-  z-index: 10;
+  z-index: var(--z-chrome);
   transform: translateY(-50%);
   padding: 10px 8px;
   background: var(--colour-background-background);
@@ -46,6 +46,25 @@
 .link:hover .hover,
 .link:focus-visible .hover {
   opacity: 1;
+}
+
+/*
+ * Phones (Figma 402px frames): the rail turns into a floating bar centred at
+ * the bottom of the screen, 164×60, 27px up from the bottom edge.
+ */
+@media (max-width: 639px) {
+  .nav {
+    top: auto;
+    bottom: calc(27px + env(safe-area-inset-bottom, 0px));
+    left: 50%;
+    transform: translateX(-50%);
+    /* Figma mobile NavBar: drop shadow 0 1px 8px, 5% white. */
+    box-shadow: 0 1px 8px rgba(255, 255, 255, 0.05);
+  }
+
+  .list {
+    flex-direction: row;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

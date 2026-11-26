@@ -1,23 +1,25 @@
-.reveal {
-  position: relative;
+/* Placeholder that holds the reveal's place while the letters draw behind the page. */
+.frame {
   width: 638px;
   max-width: 100%;
   aspect-ratio: 638 / 441;
   margin: 0;
-  overflow: hidden;
-  /* Lets the artwork's black background melt into the page background. */
-  mix-blend-mode: lighten;
 }
 
-.cover,
-.cropped {
-  position: absolute;
-  max-width: none;
+/* Image style: today's photo, whole, inside the reveal frame. */
+.photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 638px;
+  max-width: 100%;
+  aspect-ratio: 638 / 441;
+  margin: 0;
 }
 
-.cover {
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.photo img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--border-radius-card-small);
 }

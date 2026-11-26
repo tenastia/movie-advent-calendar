@@ -1,0 +1,160 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+  padding: 32px 24px;
+  background: var(--colour-background-card-background);
+  border-radius: var(--border-radius-section);
+}
+
+/* "Preview" on the left, Share on the right. */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.label {
+  margin: 0;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-regular);
+  font-size: 14px;
+  line-height: 17px;
+}
+
+/* Fills the rest of the panel. */
+.stage {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  overflow: hidden;
+  background: rgba(217, 217, 217, 0.05);
+  border-radius: 16px;
+}
+
+/* Share button with its status line underneath, right-aligned on wide screens. */
+.shareArea {
+  position: relative;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* Below the button without moving it (the header aligns to the button's bottom edge). */
+.shareStatus {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: max-content;
+  max-width: min(360px, 80vw);
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 16px;
+  text-align: right;
+}
+
+.shareStatus:empty {
+  display: none;
+}
+
+.shareLink {
+  color: rgba(255, 255, 255, 0.9);
+  word-break: break-all;
+}
+
+.share:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.share {
+  flex: none;
+  width: 225px;
+  height: 44px;
+  margin: 0;
+  padding: 8px 16px;
+  background: #d1d1d1;
+  border: 1px solid #d1d1d1;
+  border-radius: 46px;
+  color: #111;
+  font-weight: var(--font-weight-regular);
+  font-size: 14px;
+  line-height: 17px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease-out,
+    border-color 120ms ease-out;
+}
+
+.share:hover {
+  background: #e6e6e6;
+  border-color: #e6e6e6;
+}
+
+.share:focus-visible {
+  outline: 2px solid var(--colour-border-input-focus);
+  outline-offset: 3px;
+}
+
+/*
+ * Phones (Figma 402px "Frame 23"): the label, a 197px-tall preview 12px below
+ * it, then a full-width Share button 26px further down.
+ */
+@media (max-width: 639px) {
+  .panel {
+    gap: 26px;
+  }
+
+  /* Let the label, stage and button order themselves within the panel. */
+  .header {
+    display: contents;
+  }
+
+  /* 12px to the stage, like the other labels to their fields (the panel's gap is 26px). */
+  .label {
+    margin-bottom: -14px;
+  }
+
+  .stage {
+    flex: none;
+    order: 1;
+    height: 197px;
+    min-height: 0;
+  }
+
+  .shareArea {
+    order: 2;
+    align-items: stretch;
+  }
+
+  .shareStatus {
+    position: static;
+    width: auto;
+    max-width: none;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .share {
+    width: 100%;
+    border-color: var(--colour-icon-icon-action);
+  }
+
+  .share:hover {
+    border-color: var(--colour-icon-icon-action);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .share {
+    transition: none;
+  }
+}
