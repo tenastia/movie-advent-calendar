@@ -54,7 +54,7 @@ export const SPEC = {
   uppercase: { group: 'Layout', value: true },
   titleMaxLines: { group: 'Layout', value: 2, min: 1, max: 4, step: 1, label: 'title lines', hint: 'The title wraps (at spaces) when wider than the number grid' },
   titleLineSpacing: { group: 'Layout', value: 1.5, min: 1, max: 4, step: 0.05, label: 'title line gap', hint: 'Distance between title lines, in number-grid rows' },
-  titleSize: { group: 'Layout', value: 4, min: 1, max: 8, step: 0.1, label: 'title size', hint: "Largest title letters, as a multiple of the number's letters; shrinks until the title fits where the number was" },
+  titleSize: { group: 'Layout', value: 2, min: 1, max: 8, step: 0.1, label: 'title size', hint: "Largest title letters, as a multiple of the number's letters; shrinks until the title fits where the number was" },
 
   // ── Schedule: boundaries of the day, in hours ──
   decayStart: { group: 'Schedule', value: 0, min: 0, max: 23.75, step: 0.25, label: 'decay start (h)', hint: 'The number starts coming apart' },
