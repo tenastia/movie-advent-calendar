@@ -1,6 +1,6 @@
-import { useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { ListNameField } from '../../components/ListNameField/ListNameField';
-import { PreviewPanel } from '../../components/PreviewPanel/PreviewPanel';
+import { PreviewPanel, type ShareState } from '../../components/PreviewPanel/PreviewPanel';
 import type { RevealStyle } from '../../data/types';
 import { SegmentedControl } from '../../components/SegmentedControl/SegmentedControl';
 import { SiteHeader } from '../../components/SiteHeader/SiteHeader';
@@ -8,6 +8,8 @@ import { TitleCalendar } from '../../components/TitleCalendar/TitleCalendar';
 import { TitleList } from '../../components/TitleList/TitleList';
 import { ViewToggle, type TitlesView } from '../../components/ViewToggle/ViewToggle';
 import { sampleReveal } from '../../data/sampleReveal';
+import { createCalendar } from '../../data/sharedApi';
+import { getCountdownRange } from '../../lib/calendar';
 import styles from './CreatePage.module.css';
 
 const MAX_DAYS = 24;
@@ -39,8 +41,50 @@ export function CreatePage() {
   const setTitle = (index: number, title: string) =>
     setTitles((previous) => previous.map((t, i) => (i === index ? title : t)));
 
-  const handleShare = () => {
-    // Sharing has its own design (recipient email + note) and isn't built yet.
+  const [share, setShare] = useState<ShareState>({ status: 'idle' });
+  const nameInput = () => document.getElementById(nameId) as HTMLInputElement | null;
+
+  // Any edit after sharing means the link no longer matches what's on screen.
+  useEffect(() => {
+    setShare((current) => (current.status === 'saving' ? current : { status: 'idle' }));
+  }, [name, days, titles, revealStyle]);
+
+  const copy = async (url: string) => {
+    try {
+      await navigator.clipboard.writeText(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  // Saves the calendar and hands out a link (/c/<id>). Sharing by email has its own design and comes later.
+  const handleShare = async () => {
+    if (share.status === 'done') {
+      setShare({ ...share, copied: await copy(share.url) });
+      return;
+    }
+    if (!name.trim()) {
+      setShare({ status: 'error', message: 'Give the calendar a name first.' });
+      nameInput()?.focus();
+      return;
+    }
+    const { first, last } = getCountdownRange(days);
+    const movies = titles.slice(first - 1, last).map((t) => t.trim());
+    const missing = movies.filter((t) => !t).length;
+    if (missing) {
+      setShare({ status: 'error', message: `Add a movie for each day first (${missing} to go).` });
+      return;
+    }
+
+    setShare({ status: 'saving' });
+    try {
+      const id = await createCalendar({ name: name.trim(), length: days, revealStyle, movies });
+      const url = `${window.location.origin}/c/${id}`;
+      setShare({ status: 'done', url, copied: await copy(url) });
+    } catch (error) {
+      setShare({ status: 'error', message: (error as Error).message });
+    }
   };
 
   return (
@@ -103,6 +147,7 @@ export function CreatePage() {
           revealStyle={revealStyle}
           onRevealStyleChange={setRevealStyle}
           onShare={handleShare}
+          share={share}
         />
       </main>
     </div>

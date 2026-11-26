@@ -12,15 +12,31 @@ const REVEAL_STYLES = [
   { value: 'image', label: 'Image' },
 ] as const;
 
+/** Where sharing stands, shown under the Share button. */
+export type ShareState =
+  | { status: 'idle' }
+  | { status: 'saving' }
+  | { status: 'done'; url: string; copied: boolean }
+  | { status: 'error'; message: string };
+
+const SHARE_LABEL: Record<ShareState['status'], string> = {
+  idle: 'Share the Calendar',
+  saving: 'Saving…',
+  done: 'Copy the link',
+  error: 'Share the Calendar',
+};
+
 interface PreviewPanelProps {
   image: RevealImage;
   revealStyle: RevealStyle;
   onRevealStyleChange: (style: RevealStyle) => void;
   onShare: () => void;
+  share: ShareState;
 }
 
-export function PreviewPanel({ image, revealStyle, onRevealStyleChange, onShare }: PreviewPanelProps) {
+export function PreviewPanel({ image, revealStyle, onRevealStyleChange, onShare, share }: PreviewPanelProps) {
   const styleLabelId = useId();
+  const shareStatusId = useId();
   // The artwork is 144px wide in the phone preview (Figma "Frame 25"), 233px on wider screens.
   const isPhone = useMediaQuery(PHONE_QUERY);
 
@@ -38,9 +54,28 @@ export function PreviewPanel({ image, revealStyle, onRevealStyleChange, onShare 
             onChange={onRevealStyleChange}
           />
         </div>
-        <button type="button" className={styles.share} onClick={onShare}>
-          Share the Calendar
-        </button>
+        <div className={styles.shareArea}>
+          <button
+            type="button"
+            className={styles.share}
+            onClick={onShare}
+            disabled={share.status === 'saving'}
+            aria-describedby={share.status === 'idle' ? undefined : shareStatusId}
+          >
+            {share.status === 'done' && share.copied ? 'Link copied' : SHARE_LABEL[share.status]}
+          </button>
+          <p id={shareStatusId} className={styles.shareStatus} role="status">
+            {share.status === 'done' && (
+              <>
+                Send this link to your friend:{' '}
+                <a className={styles.shareLink} href={share.url}>
+                  {share.url.replace(/^https?:\/\//, '')}
+                </a>
+              </>
+            )}
+            {share.status === 'error' && share.message}
+          </p>
+        </div>
       </div>
 
       <div className={styles.stage}>

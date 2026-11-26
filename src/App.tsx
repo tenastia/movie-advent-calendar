@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useMatch } from 'react-router';
 import { CalendarPicker } from './components/CalendarPicker/CalendarPicker';
 import { NavBar } from './components/NavBar/NavBar';
+import { OpenSharedCalendar } from './components/OpenSharedCalendar/OpenSharedCalendar';
 import { CalendarsProvider, useCalendars } from './data/CalendarsContext';
 import { CreatePage } from './pages/CreatePage/CreatePage';
 import { HomePage } from './pages/HomePage/HomePage';
@@ -34,6 +35,8 @@ export function App() {
           <Route element={<HomeLayout />}>
             <Route path="/" element={null} />
             <Route path="/calendars" element={<CalendarPicker />} />
+            {/* A calendar someone shared: opens it on the home page. */}
+            <Route path="/c/:id" element={<OpenSharedCalendar />} />
           </Route>
           <Route path="/create" element={<CreatePage />} />
           {/* No other pages exist yet, so send them home. */}

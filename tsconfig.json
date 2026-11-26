@@ -16,5 +16,5 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src", "netlify", "vite.config.ts"]
 }
