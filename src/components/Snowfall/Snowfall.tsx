@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 import { ensureFont } from '../../motion/fonts';
 import styles from './Snowfall.module.css';
 
-/** The letters that fall. */
-const LETTERS = Array.from('movie advent calendar 2026').filter((c) => c !== ' ');
+/** The letters that fall, in capitals like the movie titles' letters. */
+const LETTERS = Array.from('MOVIE ADVENT CALENDAR 2026').filter((c) => c !== ' ');
 /** The letter motion's glyph face and colour, so the snow matches it. */
 const FONT = '"JetBrains Mono", ui-monospace, monospace';
 const WEIGHT = 500;
@@ -48,7 +48,7 @@ const speedOf = (f: Flake) => lerp(14, 50, f.depth); // px per second
 const swayOf = (f: Flake) => lerp(6, 26, f.depth); // px
 
 /**
- * Before a calendar starts: letters of "movie advent calendar 2026" snowing
+ * Before a calendar starts: letters of "MOVIE ADVENT CALENDAR 2026" snowing
  * down the whole screen behind the page. Near letters are bigger, brighter and
  * faster; far ones small, faint and slow. With reduced motion the snow holds still.
  */
