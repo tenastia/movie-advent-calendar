@@ -12,7 +12,7 @@ interface TodayBoxProps {
 }
 
 /**
- * Today's date on the phone home page (Figma 48×48 "CalCard"), in place of the
+ * Today's date on the phone home page (Figma 40×40 "CalCard"), in place of the
  * pile of day cards. Its outline carries the same reveal-progress ring as
  * today's card; tapping it opens the days so far and how they were guessed.
  */
@@ -29,7 +29,7 @@ export function TodayBox({ day, expanded, onOpen, ref }: TodayBoxProps) {
       aria-expanded={expanded}
       onClick={onOpen}
     >
-      <img className={styles.outline} src={outline} width={49} height={49} alt="" />
+      <img className={styles.outline} src={outline} width={41} height={41} alt="" />
       {/* Time until the reveal: fills clockwise from the top centre. */}
       <span ref={progressRef} className={styles.progress} aria-hidden="true" />
       <span className={styles.day} aria-hidden="true">

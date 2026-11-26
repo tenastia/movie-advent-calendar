@@ -25,6 +25,7 @@ export function createLetterMaterial(mode: MotionMode, layer: LetterLayer) {
     uTime: { value: 0 },
     uStatic: { value: STATIC_LAYER[layer] },
     uNumberEm: { value: 1 },
+    uTitleScale: { value: 1 },
     uFocus: { value: 20 },
     uSpan: { value: 0 },
     uDecay0: { value: 0 },

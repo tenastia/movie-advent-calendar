@@ -11,7 +11,7 @@ import { buildAtlas, type GlyphAtlas } from './atlas'
 import { clock } from './clock'
 import { daySchedule, midnightFade } from './day'
 import { ensureFont } from './fonts'
-import { buildField, layoutTitleGrid, normalizeTitle, titleSlots, type LetterField, type TitleLayout } from './layout'
+import { buildField, fitTitleGrid, normalizeTitle, titleSlots, type LetterField, type TitleLayout } from './layout'
 import { applyParams, createLetterMaterial, type LetterLayer } from './material'
 import { getMode } from './modes'
 import type { MotionParams } from './params'
@@ -150,14 +150,13 @@ export function LetterScene({ params, modeId, day, title, nextTitle, reduced, sm
   useEffect(() => () => geometry?.dispose(), [geometry])
   useEffect(() => () => nextGeometry?.dispose(), [nextGeometry])
 
-  // ── 3. Title on the number's own grid pitch (today and tomorrow, for framing) ──
+  // ── 3. Title on the number's grid pitch, scaled up to fill where the number was (today and tomorrow, for framing) ──
   const titles = useMemo(() => {
     if (!built) return null
-    return {
-      today: layoutTitleGrid(built.titleText, built.field, params.titleMaxLines, params.titleLineSpacing),
-      next: layoutTitleGrid(built.nextText, built.next, params.titleMaxLines, params.titleLineSpacing),
-    }
-  }, [built, params.titleMaxLines, params.titleLineSpacing])
+    const fit = (text: string, field: LetterField) =>
+      fitTitleGrid(text, field, params.titleMaxLines, params.titleLineSpacing, params.titleSize)
+    return { today: fit(built.titleText, built.field), next: fit(built.nextText, built.next) }
+  }, [built, params.titleMaxLines, params.titleLineSpacing, params.titleSize])
 
   useLayoutEffect(() => {
     if (!geometry || !titles || !built) return
@@ -220,8 +219,9 @@ export function LetterScene({ params, modeId, day, title, nextTitle, reduced, sm
     for (const { layer, mat } of materials) {
       applyParams(mat, params, built?.atlas ?? null)
       if (framing) mat.uniforms.uNumberEm.value = layer === 'next' ? framing.nextEm : framing.numberEm
+      if (titles) mat.uniforms.uTitleScale.value = titles.today.scale
     }
-  }, [materials, params, built, framing])
+  }, [materials, params, built, framing, titles])
 
   useEffect(() => {
     if (built && titles && onStats) {
