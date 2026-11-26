@@ -16,6 +16,7 @@ export function buildCalendar(list: MovieList, currentDay: number, records: Reco
   const { first, last } = getCountdownRange(list.length);
   const day = Math.min(Math.max(currentDay, first), last);
   const titleFor = (d: number) => list.movies[d - first] ?? '';
+  const photo = list.revealStyle === 'image' ? list.images?.[day - first] : null;
   const statusFor = (d: number): DayStatus => (records[d]?.solved ? 'guessed' : 'missed');
 
   return {
@@ -30,7 +31,7 @@ export function buildCalendar(list: MovieList, currentDay: number, records: Reco
       day,
       title: titleFor(day),
       nextTitle: day < last ? titleFor(day + 1) : undefined,
-      reveal: sampleReveal,
+      reveal: photo ? { src: photo, alt: `The photo for December ${day}` } : sampleReveal,
     },
     days: Array.from({ length: day - first + 1 }, (_, i) => first + i).map((d) => ({
       day: d,

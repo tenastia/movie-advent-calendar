@@ -1,3 +1,4 @@
+import type { SharedCalendar } from '../shared/sharedCalendar';
 import type { RevealStyle } from './types';
 
 /**
@@ -13,6 +14,21 @@ export interface MovieList {
   /** One movie per day, first day first. */
   movies: string[];
   revealStyle: RevealStyle;
+  /** Image style: one photo URL per day, first day first. */
+  images?: (string | null)[];
+}
+
+/** A calendar opened from a share link, as a list (its movies so far, up to tomorrow). */
+export function sharedToMovieList(shared: SharedCalendar): MovieList {
+  return {
+    id: shared.id,
+    name: shared.name,
+    description: '',
+    length: shared.length,
+    movies: shared.movies,
+    revealStyle: shared.revealStyle,
+    images: shared.images,
+  };
 }
 
 export const movieLists: MovieList[] = [

@@ -1,8 +1,10 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 import { getCalendarDay, readDayOverride } from '../lib/calendarDay';
+import type { SharedCalendar } from '../shared/sharedCalendar';
 import { buildCalendar } from './buildCalendar';
 import { useAllGuessRecords } from './guessStore';
-import { movieLists } from './movieLists';
+import { movieLists, sharedToMovieList } from './movieLists';
+import { saveSharedCalendar, useSharedCalendars } from './sharedStore';
 import type { Calendar } from './types';
 
 interface CalendarsState {
@@ -10,6 +12,10 @@ interface CalendarsState {
   /** The calendar shown on the home page. */
   active: Calendar;
   setActiveId: (id: string) => void;
+  /** The December day the calendars are on (today, the preview day, or ?day=N). */
+  currentDay: number;
+  /** Adds (or refreshes) a calendar opened from a share link and shows it. */
+  openShared: (calendar: SharedCalendar) => void;
 }
 
 const CalendarsContext = createContext<CalendarsState | null>(null);
@@ -19,9 +25,13 @@ export function CalendarsProvider({ children }: { children: ReactNode }) {
   // Today's December day (or ?day=N); read once per visit.
   const [currentDay] = useState(() => getCalendarDay(new Date(), readDayOverride(window.location.search)));
   const records = useAllGuessRecords();
+  const shared = useSharedCalendars();
   const calendars = useMemo(
-    () => movieLists.map((list) => buildCalendar(list, currentDay, records[list.id] ?? {})),
-    [currentDay, records],
+    () =>
+      [...movieLists, ...Object.values(shared).map(sharedToMovieList)].map((list) =>
+        buildCalendar(list, currentDay, records[list.id] ?? {}),
+      ),
+    [currentDay, records, shared],
   );
   const [activeId, setActiveId] = useState(calendars[0].id);
 
@@ -30,8 +40,13 @@ export function CalendarsProvider({ children }: { children: ReactNode }) {
       calendars,
       active: calendars.find((calendar) => calendar.id === activeId) ?? calendars[0],
       setActiveId,
+      currentDay,
+      openShared: (calendar: SharedCalendar) => {
+        saveSharedCalendar(calendar);
+        setActiveId(calendar.id);
+      },
     }),
-    [calendars, activeId],
+    [calendars, activeId, currentDay],
   );
 
   return <CalendarsContext.Provider value={value}>{children}</CalendarsContext.Provider>;
