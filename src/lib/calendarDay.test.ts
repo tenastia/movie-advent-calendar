@@ -22,7 +22,9 @@ describe('readDayOverride', () => {
   it('reads 1–24 and ignores anything else', () => {
     expect(readDayOverride('?day=13')).toBe(13);
     expect(readDayOverride('?time=03:00&day=1')).toBe(1);
-    expect(readDayOverride('?day=0')).toBeUndefined();
+    expect(readDayOverride('?day=0')).toBe(0);
+    expect(readDayOverride('?day=')).toBeUndefined();
+    expect(readDayOverride('?day=-1')).toBeUndefined();
     expect(readDayOverride('?day=25')).toBeUndefined();
     expect(readDayOverride('?day=abc')).toBeUndefined();
     expect(readDayOverride('')).toBeUndefined();

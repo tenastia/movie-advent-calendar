@@ -1,11 +1,14 @@
 /** The day shown outside December (as in the designs), so the calendars can be tried any time. */
 export const PREVIEW_DAY = 9;
 
-/** `?day=N` (1–24) picks the December day to show, for testing. */
+/**
+ * `?day=N` picks the December day to show, for testing: 1–24, or 0 for
+ * before 1 December (no calendar has started yet).
+ */
 export function readDayOverride(search: string): number | undefined {
   const value = new URLSearchParams(search).get('day');
   const day = Number(value);
-  return value !== null && Number.isInteger(day) && day >= 1 && day <= 24 ? day : undefined;
+  return value !== null && value !== '' && Number.isInteger(day) && day >= 0 && day <= 24 ? day : undefined;
 }
 
 /**

@@ -93,10 +93,14 @@ export function parseCalendarInput(body: unknown): Result<CalendarInput> {
   return { ok: true, value: { name, length: length as number, revealStyle, movies, images } };
 }
 
-/** The part of a stored calendar a friend may see on `day`: everything up to tomorrow. */
+/**
+ * The part of a stored calendar a friend may see on `day`: everything up to
+ * tomorrow, or nothing before the calendar starts.
+ */
 export function visibleCalendar(stored: StoredCalendar, day: number): SharedCalendar {
   const firstDay = 25 - stored.length;
-  const visibleTo = Math.min(24, Math.max(firstDay, Math.round(day)) + 1);
+  const today = Math.round(day);
+  const visibleTo = today < firstDay ? firstDay - 1 : Math.min(24, today + 1);
   const count = visibleTo - firstDay + 1;
   return {
     id: stored.id,
