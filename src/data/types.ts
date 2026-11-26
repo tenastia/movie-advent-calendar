@@ -18,7 +18,11 @@ export interface RevealImage {
 }
 
 export interface Calendar {
-  owner: string;
+  id: string;
+  name: string;
+  description: string;
+  /** Number of days (movies), counting down to Christmas Eve. */
+  length: number;
   /** Daily reveal time, "HH:MM" in local time. */
   revealTime: string;
   attemptsPerDay: number;

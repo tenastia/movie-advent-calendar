@@ -1,0 +1,239 @@
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* 15px + 1px border = the design's 16px inset. */
+  padding: 15px;
+  background: #1b1b1b;
+  border: 1px solid var(--colour-border-card-border);
+  border-radius: var(--border-radius-card-small);
+}
+
+.month {
+  margin: 0;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-regular);
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.weekdays,
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 41px);
+  column-gap: 8px;
+  justify-content: center;
+}
+
+.weekdays {
+  color: rgba(255, 255, 255, 0.4);
+  opacity: 0.4;
+  font-weight: var(--font-weight-regular);
+  font-size: 11px;
+  line-height: 13px;
+}
+
+.weekdays span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+}
+
+.grid {
+  position: relative;
+  grid-auto-rows: 32px;
+  row-gap: 8px;
+}
+
+.cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 41px;
+  height: 32px;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: var(--font-weight-regular);
+  font-size: 13px;
+  line-height: 16px;
+}
+
+/* Days outside December, or beyond the chosen number of days. */
+.muted {
+  opacity: 0.4;
+}
+
+/* Days in the calendar's range: one step heavier than the dimmed ones (Light → Regular). */
+.day {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  font-weight: var(--font-weight-regular);
+  cursor: pointer;
+}
+
+.day:hover .number {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.day:focus-visible {
+  outline: 2px solid var(--colour-border-input-focus);
+  outline-offset: -2px;
+}
+
+.number,
+.check {
+  position: relative;
+}
+
+/* Movie title shown above a done day on hover or keyboard focus. */
+.tooltip {
+  --tooltip-x: -50%;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  z-index: 2;
+  max-width: 220px;
+  padding: 6px 10px;
+  overflow: hidden;
+  background: var(--colour-background-background);
+  border: 1px solid var(--colour-border-card-border);
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: var(--font-weight-regular);
+  font-size: 12px;
+  line-height: 15px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transform: translate(var(--tooltip-x), 4px);
+  pointer-events: none;
+  transition:
+    opacity 120ms ease-out,
+    transform 120ms ease-out;
+}
+
+.tooltipStart {
+  --tooltip-x: 0;
+  left: 0;
+}
+
+.tooltipEnd {
+  --tooltip-x: 0;
+  right: 0;
+  left: auto;
+}
+
+.day:hover .tooltip,
+.day:focus-visible .tooltip {
+  opacity: 1;
+  transform: translate(var(--tooltip-x), 0);
+  transition-delay: 80ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip {
+    transition: opacity 120ms ease-out;
+  }
+}
+
+/*
+ * Phones (Figma "December 2026 Calendar", 278px grid): 36px columns spread edge
+ * to edge, shrinking on narrower screens; the title field spans the grid.
+ */
+@media (max-width: 639px) {
+  .weekdays,
+  .grid {
+    grid-template-columns: repeat(7, minmax(0, 36px));
+    column-gap: 0;
+    justify-content: space-between;
+  }
+
+  .cell {
+    width: 100%;
+  }
+
+  .titleField {
+    right: 0;
+    left: 0;
+    width: auto;
+    transform: none;
+  }
+}
+
+/* Selection ring / filled disc, centred half a pixel low as in Figma. */
+.marker {
+  position: absolute;
+  top: calc(50% + 0.5px);
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Title field that opens under the selected day's week (Figma InputField). */
+.titleField {
+  position: absolute;
+  top: calc(var(--row) * 40px + 37px);
+  left: 50%;
+  z-index: 1;
+  width: 340px;
+  transform: translateX(-50%);
+}
+
+.titleInput {
+  display: block;
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  /* Right padding keeps the text clear of the clear button. */
+  padding: 8px 40px 8px 16px;
+  background: #1f1f1f;
+  border: 1px solid var(--colour-border-input-action);
+  border-radius: var(--border-radius-input-field);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: var(--font-weight-regular);
+  font-size: 14px;
+  line-height: 17px;
+  outline: none;
+}
+
+.titleInput::placeholder {
+  color: var(--colour-typography-input-text);
+  opacity: 1;
+}
+
+/* Clears the whole title; sits in the field's 36px end slot, like the guess field's arrow. */
+.clear {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  transform: translateY(-50%);
+  background: none;
+  border: 0;
+  border-radius: 10px;
+  color: var(--colour-icon-icon-action);
+  cursor: pointer;
+  transition: color 120ms ease-out;
+}
+
+@media (hover: hover) {
+  .clear:hover {
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clear {
+    transition: none;
+  }
+}

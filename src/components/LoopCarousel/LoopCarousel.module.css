@@ -1,0 +1,72 @@
+.carousel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/*
+ * Figma phone "Calendars": 288px cards 16px apart, the first 22px in from the
+ * left and the next one peeking in on the right. Padding and scroll-padding
+ * match, so each card snaps to the same 22px inset.
+ */
+.track {
+  position: relative;
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  /* Room for the cards' shadow, hover lift and focus ring, which scrolling would otherwise clip. */
+  margin-block: -16px;
+  padding: 16px 22px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  outline: none;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 22px;
+  scrollbar-width: none;
+  /* Soft left edge; hides the sliver of the previous card. */
+  -webkit-mask-image: linear-gradient(to right, transparent 6px, #000 20px);
+  mask-image: linear-gradient(to right, transparent 6px, #000 20px);
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.slide {
+  flex: none;
+  scroll-snap-align: start;
+}
+
+/*
+ * Progress: a 144px track (the countdown pill's width) split into one
+ * thumb-width per card. --offset is the scroll position in cards (0 to count),
+ * set as the row scrolls.
+ */
+.progress {
+  --offset: 0;
+  position: relative;
+  flex: none;
+  width: 144px;
+  height: 2px;
+  margin-top: 32px;
+  overflow: hidden;
+  background: var(--colour-border-card-border);
+  border-radius: 1px;
+}
+
+.thumb {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: calc(100% / var(--count));
+  background: var(--colour-icon-icon-action);
+  border-radius: 1px;
+  transform: translateX(calc(var(--offset) * 100%));
+}
+
+/* One track-length behind: shows whatever has run off the end. */
+.wrapped {
+  transform: translateX(calc((var(--offset) - var(--count)) * 100%));
+}

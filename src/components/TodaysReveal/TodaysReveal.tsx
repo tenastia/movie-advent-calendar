@@ -1,6 +1,7 @@
 import { lazy, Suspense, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { RevealImage } from '../../data/types';
+import { RevealArt } from '../RevealArt/RevealArt';
 import styles from './TodaysReveal.module.css';
 
 // Three.js only downloads once the page has rendered.
@@ -35,18 +36,7 @@ export function TodaysReveal({ day, title, nextTitle, image }: TodaysRevealProps
   const [webgl] = useState(hasWebGL);
   const [background] = useState(pageBackground);
 
-  if (!webgl) {
-    return (
-      <figure className={styles.reveal}>
-        <img
-          className={image.crop ? styles.cropped : styles.cover}
-          style={image.crop}
-          src={image.src}
-          alt={image.alt}
-        />
-      </figure>
-    );
-  }
+  if (!webgl) return <RevealArt image={image} />;
 
   // The frame keeps its place in the layout; the letters render in a
   // full-viewport canvas behind the page, centred on this frame.
