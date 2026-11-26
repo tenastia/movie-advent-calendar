@@ -53,6 +53,7 @@ interface CardStackProps {
   /** Revealed days, in any order. */
   days: CalendarDay[];
   today: number;
+  className?: string;
 }
 
 /**
@@ -60,7 +61,7 @@ interface CardStackProps {
  * front card tosses it behind the deck, revealing the day before; after the
  * first day it wraps back round to the newest.
  */
-export function CardStack({ days, today }: CardStackProps) {
+export function CardStack({ days, today, className }: CardStackProps) {
   const revealed = useIsRevealed();
   const revealsAt = formatRevealTime(REVEAL_AT);
   const headingId = useId();
@@ -97,7 +98,11 @@ export function CardStack({ days, today }: CardStackProps) {
   };
 
   return (
-    <section className={styles.stack} aria-roledescription="carousel" aria-labelledby={headingId}>
+    <section
+      className={className ? `${styles.stack} ${className}` : styles.stack}
+      aria-roledescription="carousel"
+      aria-labelledby={headingId}
+    >
       <h2 id={headingId} className="visually-hidden">
         Your calendar so far
       </h2>

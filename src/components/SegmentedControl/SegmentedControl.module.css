@@ -67,6 +67,14 @@
   pointer-events: none;
 }
 
+/* Phones: filled rows (Days) shrink to fit the column instead of overflowing it. */
+@media (max-width: 639px) {
+  .fill .option {
+    min-width: 0;
+    padding-inline: 4px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .option {
     transition: none;

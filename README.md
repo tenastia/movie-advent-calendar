@@ -72,6 +72,10 @@ full-viewport canvas behind the page, centred on the reveal frame. It runs on th
 
 Routing uses React Router. Netlify serves `index.html` for every path (`public/_redirects`), so deep links work.
 
+On phones (up to 639px wide, the Figma 402px frames) the side nav becomes a bar floating at the bottom,
+the home page shows today's date box instead of the deck (tap it to open the deck of days and guesses),
+the Calendars screen is a sideways carousel, and the Create page is a single 358px column.
+
 ## Current state
 
 Pages run on mock data (`src/data/mockCalendar.ts`) and local state. Not built yet:

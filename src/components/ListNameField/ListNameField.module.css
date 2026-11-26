@@ -13,7 +13,7 @@
   border: 1px solid var(--colour-border-input-action);
   border-radius: var(--border-radius-input-field);
   color: rgba(255, 255, 255, 0.9);
-  font-weight: var(--font-weight-light);
+  font-weight: var(--font-weight-regular);
   font-size: 14px;
   line-height: 17px;
   outline: none;

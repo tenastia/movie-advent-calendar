@@ -1,0 +1,31 @@
+/* Same dimmed, blurred backdrop as the Calendars screen; the wordmark, countdown and nav stay above it. */
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(17, 17, 17, 0.9);
+  -webkit-backdrop-filter: blur(5.15px);
+  backdrop-filter: blur(5.15px);
+  outline: none;
+  animation: fade-in 200ms ease-out backwards;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Room above the pile for its "DECEMBER 9" label, so label and pile centre together. */
+.sheet .deck {
+  margin-top: 48px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet {
+    animation: none;
+  }
+}

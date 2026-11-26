@@ -10,7 +10,9 @@ export function SiteHeader() {
   return (
     <header className={styles.header}>
       <Wordmark />
-      <Countdown target={christmas} label="Time until Christmas" />
+      <div className={styles.countdown}>
+        <Countdown target={christmas} label="Time until Christmas" />
+      </div>
     </header>
   );
 }
