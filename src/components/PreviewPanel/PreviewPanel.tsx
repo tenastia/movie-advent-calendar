@@ -1,19 +1,10 @@
 import { lazy, Suspense, useId, useState } from 'react';
 import { PHONE_QUERY, useMediaQuery } from '../../hooks/useMediaQuery';
-import type { RevealImage, RevealStyle } from '../../data/types';
-import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
-import { PhotoTiles, type PhotoSlot } from '../PhotoTiles/PhotoTiles';
+import type { RevealImage } from '../../data/types';
 import { RevealArt } from '../RevealArt/RevealArt';
 import styles from './PreviewPanel.module.css';
 
-
-const REVEAL_STYLES = [
-  { value: 'drifting', label: 'Drifting' },
-  { value: 'blizzard', label: 'Blizzard' },
-  { value: 'image', label: 'Image' },
-] as const;
-
-// Three.js only downloads when a motion preview is shown.
+// Three.js only downloads when the motion preview is shown.
 const MotionPreview = lazy(() => import('../MotionPreview/MotionPreview'));
 
 /** The stage's colour: 5% light grey over the panel, for the preview canvas to clear to. */
@@ -43,56 +34,32 @@ const SHARE_LABEL: Record<ShareState['status'], string> = {
 };
 
 interface PreviewPanelProps {
+  /** Static artwork, shown where the letter motion can't run. */
   image: RevealImage;
-  revealStyle: RevealStyle;
-  onRevealStyleChange: (style: RevealStyle) => void;
   onShare: () => void;
   share: ShareState;
-  /** The day and movie the motion preview plays (the calendar's first day). */
+  /** The day and movie the preview plays (the calendar's first day). */
   previewDay: number;
   previewTitle: string;
-  /** Image style: the calendar's days and their photos. */
-  photoDays: number[];
-  photos: Record<number, PhotoSlot>;
-  onPickPhoto: (day: number, file: File) => void;
 }
 
-export function PreviewPanel({
-  image,
-  revealStyle,
-  onRevealStyleChange,
-  onShare,
-  share,
-  previewDay,
-  previewTitle,
-  photoDays,
-  photos,
-  onPickPhoto,
-}: PreviewPanelProps) {
-  const styleLabelId = useId();
+/**
+ * A preview of how each day is revealed (the letter motion, sped up), and the
+ * Share button. Other reveal styles (e.g. a photo per day) come in a later version.
+ */
+export function PreviewPanel({ image, onShare, share, previewDay, previewTitle }: PreviewPanelProps) {
+  const labelId = useId();
   const shareStatusId = useId();
   const [webgl] = useState(hasWebGL);
-  const [photoDay, setPhotoDay] = useState<number | null>(null);
-  // The photo on the stage: the tile picked last, or the first day that has one.
-  const shownDay = photoDay !== null && photoDays.includes(photoDay) ? photoDay : photoDays[0];
-  const shownPhoto = photos[shownDay];
   // The artwork is 144px wide in the phone preview (Figma "Frame 25"), 233px on wider screens.
   const isPhone = useMediaQuery(PHONE_QUERY);
 
   return (
-    <section className={styles.panel} aria-label="Preview">
+    <section className={styles.panel} aria-labelledby={labelId}>
       <div className={styles.header}>
-        <div className={styles.picker}>
-          <p id={styleLabelId} className={styles.label}>
-            Select Reveal Style
-          </p>
-          <SegmentedControl
-            labelledBy={styleLabelId}
-            options={REVEAL_STYLES}
-            value={revealStyle}
-            onChange={onRevealStyleChange}
-          />
-        </div>
+        <p id={labelId} className={styles.label}>
+          Preview
+        </p>
         <div className={styles.shareArea}>
           <button
             type="button"
@@ -118,38 +85,14 @@ export function PreviewPanel({
       </div>
 
       <div className={styles.stage}>
-        {revealStyle === 'image' ? (
-          shownPhoto?.status === 'ready' ? (
-            <img className={styles.photo} src={shownPhoto.url} alt={`The photo for December ${shownDay}`} />
-          ) : (
-            <p className={styles.stageHint}>Add a photo for each day: it’s the clue your friend guesses from.</p>
-          )
-        ) : webgl ? (
+        {webgl ? (
           <Suspense fallback={<RevealArt image={image} width={isPhone ? 144 : 233} />}>
-            <MotionPreview
-              key={revealStyle}
-              style={revealStyle}
-              day={previewDay}
-              title={previewTitle}
-              background={STAGE_BACKGROUND}
-            />
+            <MotionPreview style="drifting" day={previewDay} title={previewTitle} background={STAGE_BACKGROUND} />
           </Suspense>
         ) : (
           <RevealArt image={image} width={isPhone ? 144 : 233} />
         )}
       </div>
-
-      {revealStyle === 'image' && (
-        <div className={styles.photos}>
-          <PhotoTiles
-            days={photoDays}
-            photos={photos}
-            selected={shownDay}
-            onSelect={setPhotoDay}
-            onPick={onPickPhoto}
-          />
-        </div>
-      )}
     </section>
   );
 }

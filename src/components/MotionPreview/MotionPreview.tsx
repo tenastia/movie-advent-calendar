@@ -7,10 +7,13 @@ import { presetForStyle } from '../../motion/presets';
 import { usePrefersReducedMotion } from '../../motion/usePrefersReducedMotion';
 import styles from './MotionPreview.module.css';
 
-/** The preview loops from midnight to 13:00: the number comes apart, then the title forms and rests a moment. */
-const LOOP_END = 13 * 3600;
-/** …in about 20 seconds. */
-const LOOP_SECONDS = 20;
+/**
+ * The moment the preview shows: 06:00, as the last letters let go of the
+ * number, playing on at real speed — the same motion the home page shows
+ * then (?time=06:00), rather than a sped-up day that suggests it all happens
+ * in seconds.
+ */
+const PREVIEW_TIME = 6 * 3600;
 
 interface MotionPreviewProps {
   style: 'drifting' | 'blizzard';
@@ -20,7 +23,7 @@ interface MotionPreviewProps {
   background: string;
 }
 
-/** The Create page's preview of a reveal style: the day's letter motion, sped up and looping. */
+/** The Create page's preview of the reveal: the day's letter motion at 06:00, at real speed. */
 export default function MotionPreview({ style, day, title, background }: MotionPreviewProps) {
   const reduced = usePrefersReducedMotion();
   const preset = presetForStyle(style);
@@ -28,7 +31,7 @@ export default function MotionPreview({ style, day, title, background }: MotionP
 
   // Drive the shared motion clock while the preview is up; hand it back as the home page expects.
   useEffect(() => {
-    clock.set({ time: 0, playing: true, speed: LOOP_END / LOOP_SECONDS, loop: true, duration: LOOP_END });
+    clock.set({ time: PREVIEW_TIME, playing: true, speed: 1, loop: true, duration: DAY });
     return () => clock.set({ time: 0, playing: false, speed: 1, loop: true, duration: DAY });
   }, []);
 
@@ -47,7 +50,7 @@ export default function MotionPreview({ style, day, title, background }: MotionP
           title={title}
           nextTitle={title}
           reduced={reduced}
-          smoothing
+          smoothing={false}
         />
       </Canvas>
     </div>
