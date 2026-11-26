@@ -32,6 +32,7 @@
 
 /* Fills the rest of the panel. */
 .stage {
+  position: relative;
   display: flex;
   flex: 1;
   align-items: center;
@@ -77,6 +78,23 @@
 .share:disabled {
   cursor: progress;
   opacity: 0.7;
+}
+
+/* Image style: the shown day's photo, whole. */
+.photo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.stageHint {
+  max-width: 260px;
+  margin: 0;
+  padding: 16px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
 }
 
 .share {
@@ -125,6 +143,10 @@
   /* Let the picker, stage and button order themselves within the panel. */
   .header {
     display: contents;
+  }
+
+  .photos {
+    order: 1;
   }
 
   .stage {

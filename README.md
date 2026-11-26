@@ -95,6 +95,18 @@ uploading are rate-limited per IP. There are no accounts yet: a calendar can't b
 and the "titles up to tomorrow" rule keeps spoilers out of casual view but trusts the day the browser
 asks for.
 
+## Reveal styles
+
+A calendar's reveal style decides what the friend sees each day. On the Create page the preview plays it,
+sped up (midnight to 13:00 in about 20 seconds):
+
+- **Drifting:** the letter motion the calendars use (`CALENDAR_PRESET_KEY`, currently `test-1`)
+- **Blizzard:** the `windblown` preset
+- **Image:** no letters; you upload a photo per day (tiles under the preview), and that day's photo is
+  the clue. Photos are resized in the browser (≤ 1600px JPEG) and stored with the calendar.
+
+The mapping is `STYLE_PRESET_KEYS` in `src/motion/presets/index.ts`.
+
 ## Current state
 
 The calendars come from the movie lists in `src/data/movieLists.ts`: a list of N days runs to Christmas
@@ -110,8 +122,7 @@ For testing, add to the URL:
 
 Not built yet:
 
-- Create page: the preview always shows the sample reveal, and the reveal styles (Drifting / Blizzard /
-  Image) can be selected but don't change the preview. A draft is lost on reload. Sharing by email
-  (recipient + note) has its own design and isn't built.
+- Create page: a draft is lost on reload. Sharing by email (recipient + note) has its own design and
+  isn't built.
 - Every calendar reuses the one reveal image there is so far, and the calendar you pick is forgotten
   on reload.

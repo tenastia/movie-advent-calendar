@@ -1,6 +1,7 @@
 import { lazy, Suspense, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import type { RevealImage } from '../../data/types';
+import type { RevealImage, RevealStyle } from '../../data/types';
+import { presetForStyle } from '../../motion/presets';
 import { RevealArt } from '../RevealArt/RevealArt';
 import styles from './TodaysReveal.module.css';
 
@@ -11,8 +12,9 @@ interface TodaysRevealProps {
   day: number;
   title: string;
   nextTitle?: string;
-  /** Static artwork, shown when the browser has no WebGL. */
+  /** Static artwork, shown when the browser has no WebGL; in the Image style, today's photo. */
   image: RevealImage;
+  revealStyle?: RevealStyle;
 }
 
 function hasWebGL() {
@@ -31,10 +33,19 @@ function pageBackground() {
   return value || '#111111';
 }
 
-export function TodaysReveal({ day, title, nextTitle, image }: TodaysRevealProps) {
+export function TodaysReveal({ day, title, nextTitle, image, revealStyle = 'drifting' }: TodaysRevealProps) {
   const frameRef = useRef<HTMLElement>(null);
   const [webgl] = useState(hasWebGL);
   const [background] = useState(pageBackground);
+
+  // Image style: today's photo is the clue, with no letters.
+  if (revealStyle === 'image') {
+    return (
+      <figure className={styles.photo}>
+        <img src={image.src} alt={image.alt} />
+      </figure>
+    );
+  }
 
   if (!webgl) return <RevealArt image={image} />;
 
@@ -51,6 +62,7 @@ export function TodaysReveal({ day, title, nextTitle, image }: TodaysRevealProps
             nextTitle={nextTitle}
             anchorRef={frameRef}
             background={background}
+            preset={presetForStyle(revealStyle)}
           />
         </Suspense>,
         document.body,
