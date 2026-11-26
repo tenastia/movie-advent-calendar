@@ -41,6 +41,11 @@ interface Props {
   smoothing: boolean
   /** Pad the day number with leading zeros to this many digits: 2 draws day 9 as "09". */
   digits?: number
+  /**
+   * Share of the canvas width and height the number (and the title it becomes)
+   * may fill, when the two need different limits. Defaults to `numberFill` for both.
+   */
+  fit?: { width: number; height: number }
   onStats?: (s: SceneStats) => void
 }
 
@@ -67,14 +72,20 @@ function makeGeometry(atlas: GlyphAtlas, field: LetterField) {
 }
 
 /** Camera distance at which the number (or a title wider than it) fills `fill` of the frame. */
-function frameDistance(field: LetterField, title: TitleLayout, aspect: number, fov: number, fill: number) {
+function frameDistance(
+  field: LetterField,
+  title: TitleLayout,
+  aspect: number,
+  fov: number,
+  fill: { width: number; height: number },
+) {
   const tanHalf = Math.tan((fov * Math.PI) / 360)
   const em = NUMBER_HEIGHT / field.numberHeightEm
   const width = Math.max(field.numberWidthEm, title.widthEm) * em
-  return Math.max(NUMBER_HEIGHT / fill / (2 * tanHalf), width / fill / (2 * tanHalf * aspect))
+  return Math.max(NUMBER_HEIGHT / fill.height / (2 * tanHalf), width / fill.width / (2 * tanHalf * aspect))
 }
 
-export function LetterScene({ params, modeId, day, title, nextTitle, reduced, smoothing, digits = 2, onStats }: Props) {
+export function LetterScene({ params, modeId, day, title, nextTitle, reduced, smoothing, digits = 2, fit, onStats }: Props) {
   const mode = getMode(modeId)
   const camera = useThree((s) => s.camera) as PerspectiveCamera
   const width = useThree((s) => s.size.width)
@@ -176,16 +187,19 @@ export function LetterScene({ params, modeId, day, title, nextTitle, reduced, sm
   }, [geometry, built, params.seed, params.erosionNoise, params.erosionScale])
 
   // ── 5. Framing: the same camera distance frames the number at 00:00 and the title at rest ──
+  const fitWidth = fit?.width ?? params.numberFill
+  const fitHeight = fit?.height ?? params.numberFill
   const framing = useMemo(() => {
     if (!built || !titles) return null
     const aspect = width / Math.max(1, height)
+    const fill = { width: fitWidth, height: fitHeight }
     return {
-      distance: frameDistance(built.field, titles.today, aspect, params.fov, params.numberFill),
-      nextDistance: frameDistance(built.next, titles.next, aspect, params.fov, params.numberFill),
+      distance: frameDistance(built.field, titles.today, aspect, params.fov, fill),
+      nextDistance: frameDistance(built.next, titles.next, aspect, params.fov, fill),
       numberEm: NUMBER_HEIGHT / built.field.numberHeightEm,
       nextEm: NUMBER_HEIGHT / built.next.numberHeightEm,
     }
-  }, [built, titles, width, height, params.fov, params.numberFill])
+  }, [built, titles, width, height, params.fov, fitWidth, fitHeight])
 
   // ── 6. Materials: the animated day (or two static layers) + tomorrow's number ──
   const layers: LetterLayer[] = reduced ? ['number', 'title', 'next'] : ['motion', 'next']

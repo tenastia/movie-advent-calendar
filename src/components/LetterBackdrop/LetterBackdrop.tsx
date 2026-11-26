@@ -1,5 +1,5 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useLayoutEffect, useMemo, type RefObject } from 'react';
+import { useLayoutEffect, useMemo, useState, type RefObject } from 'react';
 import type { PerspectiveCamera } from 'three';
 import { PHONE_QUERY, useMediaQuery } from '../../hooks/useMediaQuery';
 import { clock } from '../../motion/clock';
@@ -26,6 +26,29 @@ interface LetterBackdropProps {
  * 358px between the 22px margins of a 402px screen, as wide as the guess field.
  */
 const PHONE_NUMBER_FILL = 358 / 402;
+
+/**
+ * …but never taller than this share of the reveal frame (the space between the
+ * header and today's date box), so on short phones and wider phone-layout
+ * windows the number shrinks to clear the countdown and the box. The small
+ * margin leaves room for the letter cells at the number's edges.
+ */
+const PHONE_FRAME_HEIGHT_FILL = 0.9;
+
+/** The element's height, kept up to date as the layout changes. */
+function useElementHeight(ref: RefObject<HTMLElement | null>) {
+  const [height, setHeight] = useState(0);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => setHeight(el.getBoundingClientRect().height);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref]);
+  return height;
+}
 
 /** Drives the shared motion clock from the wall clock (plus any ?time / ?speed override). */
 function WallClock() {
@@ -70,6 +93,23 @@ function CentreOn({ anchorRef }: { anchorRef: RefObject<HTMLElement | null> }) {
   return null;
 }
 
+/** The letters, sized to fit the reveal frame on phones (see PHONE_FRAME_HEIGHT_FILL). */
+function FittedLetters({
+  anchorRef,
+  isPhone,
+  ...scene
+}: Omit<Parameters<typeof LetterScene>[0], 'fit'> & { anchorRef: RefObject<HTMLElement | null>; isPhone: boolean }) {
+  const canvasHeight = useThree((s) => s.size.height);
+  const frameHeight = useElementHeight(anchorRef);
+  const numberFill = scene.params.numberFill;
+  const fit = useMemo(() => {
+    if (!isPhone || frameHeight <= 0 || canvasHeight <= 0) return undefined;
+    return { width: numberFill, height: (frameHeight * PHONE_FRAME_HEIGHT_FILL) / canvasHeight };
+  }, [isPhone, frameHeight, canvasHeight, numberFill]);
+
+  return <LetterScene {...scene} fit={fit} />;
+}
+
 export default function LetterBackdrop({ day, title, nextTitle = '', anchorRef, background }: LetterBackdropProps) {
   const reduced = usePrefersReducedMotion();
   const isPhone = useMediaQuery(PHONE_QUERY);
@@ -89,7 +129,9 @@ export default function LetterBackdrop({ day, title, nextTitle = '', anchorRef, 
       >
         <WallClock />
         <CentreOn anchorRef={anchorRef} />
-        <LetterScene
+        <FittedLetters
+          anchorRef={anchorRef}
+          isPhone={isPhone}
           params={params}
           modeId={DEFAULT_PRESET.mode}
           day={day}
