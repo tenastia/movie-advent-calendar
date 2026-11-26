@@ -45,7 +45,11 @@ export function HomePage() {
   const record = useGuessRecords(calendar.id)[today];
   const remainingAttempts = Math.max(0, calendar.attemptsPerDay - (record?.guesses.length ?? 0));
   const outcome: GuessOutcome = record?.solved ? 'solved' : remainingAttempts === 0 ? 'out' : 'playing';
-  const guess = (text: string) => recordGuess(calendar.id, today, text, isCorrectGuess(text, calendar.today.title));
+  const guess = (text: string) => {
+    const correct = isCorrectGuess(text, calendar.today.title);
+    recordGuess(calendar.id, today, text, correct);
+    return correct;
+  };
 
   return (
     <div className={styles.page}>
