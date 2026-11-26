@@ -11,7 +11,8 @@
 
 uniform float uTime;
 uniform float uStatic;      // 0 animated, 1 static number, 2 static title, 3 next day's number
-uniform float uNumberEm;    // world units per em; the title uses the same size
+uniform float uNumberEm;    // world units per em
+uniform float uTitleScale;  // title letter size relative to the number's letters
 uniform float uFocus;       // view depth that is in focus
 uniform float uSpan;        // day-seconds per frame while fast-previewing (0 = exact)
 
@@ -36,7 +37,7 @@ uniform float uFarBlur;
 uniform float uBokehGrow;
 
 attribute vec2 aNumPos;    // em, relative to the number's center
-attribute vec2 aTitlePos;  // em, relative to the number's center (same grid pitch)
+attribute vec2 aTitlePos;  // em, relative to the number's center (grid pitch × uTitleScale)
 attribute vec4 aData;      // glyph index, unused, slot order 0..1, slot index
 attribute vec4 aSched;     // release 0..1 of the decay window, arrival 0..1 of the assembly window, hero 0/1, unused
 attribute vec4 aRandA;     // per-letter randoms, used by the mode
@@ -133,6 +134,7 @@ void main() {
       alpha = 1.0 - xf;
     } else if (uStatic < 2.5) {
       pos = titlePos;
+      size = uNumberEm * uTitleScale;
       alpha = xf * hero * (1.0 - endFade);
     } else {
       alpha = endFade;
@@ -156,7 +158,7 @@ void main() {
 
     if (returns && t > start) {
       // Fly back: ease in from wherever it drifts, unwind to face the camera,
-      // land at the original letter size on the focus plane.
+      // land at the title's letter size on the focus plane.
       float prog = clamp((t - start) / max(arrive - start, 1e-3), 0.0, 1.0);
       float e = easeInOutPow(prog, uAssembleEase);
       Flight f0 = flight(start, release);
@@ -166,7 +168,7 @@ void main() {
       angle = (wrapAngle(f0.angle) + (f.angle - f0.angle)) * k;
       tilt *= k;
       roll *= k;
-      size = uNumberEm * mix(f.scale, 1.0, e);
+      size = uNumberEm * mix(f.scale, uTitleScale, e);
       bright = mix(f.bright, 1.0, e);
       alpha = mix(f.alpha, 1.0, e);
 
