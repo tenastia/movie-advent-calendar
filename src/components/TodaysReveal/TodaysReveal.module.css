@@ -5,3 +5,21 @@
   aspect-ratio: 638 / 441;
   margin: 0;
 }
+
+/* Image style: today's photo, whole, inside the reveal frame. */
+.photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 638px;
+  max-width: 100%;
+  aspect-ratio: 638 / 441;
+  margin: 0;
+}
+
+.photo img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--border-radius-card-small);
+}

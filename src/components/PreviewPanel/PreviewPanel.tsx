@@ -1,7 +1,8 @@
-import { useId } from 'react';
+import { lazy, Suspense, useId, useState } from 'react';
 import { PHONE_QUERY, useMediaQuery } from '../../hooks/useMediaQuery';
 import type { RevealImage, RevealStyle } from '../../data/types';
 import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
+import { PhotoTiles, type PhotoSlot } from '../PhotoTiles/PhotoTiles';
 import { RevealArt } from '../RevealArt/RevealArt';
 import styles from './PreviewPanel.module.css';
 
@@ -11,6 +12,21 @@ const REVEAL_STYLES = [
   { value: 'blizzard', label: 'Blizzard' },
   { value: 'image', label: 'Image' },
 ] as const;
+
+// Three.js only downloads when a motion preview is shown.
+const MotionPreview = lazy(() => import('../MotionPreview/MotionPreview'));
+
+/** The stage's colour: 5% light grey over the panel, for the preview canvas to clear to. */
+const STAGE_BACKGROUND = '#212121';
+
+function hasWebGL() {
+  try {
+    const canvas = document.createElement('canvas');
+    return Boolean(canvas.getContext('webgl2') ?? canvas.getContext('webgl'));
+  } catch {
+    return false;
+  }
+}
 
 /** Where sharing stands, shown under the Share button. */
 export type ShareState =
@@ -32,11 +48,34 @@ interface PreviewPanelProps {
   onRevealStyleChange: (style: RevealStyle) => void;
   onShare: () => void;
   share: ShareState;
+  /** The day and movie the motion preview plays (the calendar's first day). */
+  previewDay: number;
+  previewTitle: string;
+  /** Image style: the calendar's days and their photos. */
+  photoDays: number[];
+  photos: Record<number, PhotoSlot>;
+  onPickPhoto: (day: number, file: File) => void;
 }
 
-export function PreviewPanel({ image, revealStyle, onRevealStyleChange, onShare, share }: PreviewPanelProps) {
+export function PreviewPanel({
+  image,
+  revealStyle,
+  onRevealStyleChange,
+  onShare,
+  share,
+  previewDay,
+  previewTitle,
+  photoDays,
+  photos,
+  onPickPhoto,
+}: PreviewPanelProps) {
   const styleLabelId = useId();
   const shareStatusId = useId();
+  const [webgl] = useState(hasWebGL);
+  const [photoDay, setPhotoDay] = useState<number | null>(null);
+  // The photo on the stage: the tile picked last, or the first day that has one.
+  const shownDay = photoDay !== null && photoDays.includes(photoDay) ? photoDay : photoDays[0];
+  const shownPhoto = photos[shownDay];
   // The artwork is 144px wide in the phone preview (Figma "Frame 25"), 233px on wider screens.
   const isPhone = useMediaQuery(PHONE_QUERY);
 
@@ -79,8 +118,38 @@ export function PreviewPanel({ image, revealStyle, onRevealStyleChange, onShare,
       </div>
 
       <div className={styles.stage}>
-        <RevealArt image={image} width={isPhone ? 144 : 233} />
+        {revealStyle === 'image' ? (
+          shownPhoto?.status === 'ready' ? (
+            <img className={styles.photo} src={shownPhoto.url} alt={`The photo for December ${shownDay}`} />
+          ) : (
+            <p className={styles.stageHint}>Add a photo for each day: it’s the clue your friend guesses from.</p>
+          )
+        ) : webgl ? (
+          <Suspense fallback={<RevealArt image={image} width={isPhone ? 144 : 233} />}>
+            <MotionPreview
+              key={revealStyle}
+              style={revealStyle}
+              day={previewDay}
+              title={previewTitle}
+              background={STAGE_BACKGROUND}
+            />
+          </Suspense>
+        ) : (
+          <RevealArt image={image} width={isPhone ? 144 : 233} />
+        )}
       </div>
+
+      {revealStyle === 'image' && (
+        <div className={styles.photos}>
+          <PhotoTiles
+            days={photoDays}
+            photos={photos}
+            selected={shownDay}
+            onSelect={setPhotoDay}
+            onPick={onPickPhoto}
+          />
+        </div>
+      )}
     </section>
   );
 }

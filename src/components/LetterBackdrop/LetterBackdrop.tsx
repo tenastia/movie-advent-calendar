@@ -4,7 +4,7 @@ import type { PerspectiveCamera } from 'three';
 import { PHONE_QUERY, useMediaQuery } from '../../hooks/useMediaQuery';
 import { clock } from '../../motion/clock';
 import { LetterScene } from '../../motion/LetterScene';
-import { DEFAULT_PRESET } from '../../motion/presets';
+import { DEFAULT_PRESET, type Preset } from '../../motion/presets';
 import { usePrefersReducedMotion } from '../../motion/usePrefersReducedMotion';
 import { makeDayTime, readClockOverrides } from '../../motion/wallClock';
 import styles from './LetterBackdrop.module.css';
@@ -18,6 +18,8 @@ interface LetterBackdropProps {
   anchorRef: RefObject<HTMLElement | null>;
   /** Canvas clear colour; should match the page background. */
   background: string;
+  /** The motion to play (the calendar's reveal style). */
+  preset?: Preset;
 }
 
 /**
@@ -110,14 +112,21 @@ function FittedLetters({
   return <LetterScene {...scene} fit={fit} />;
 }
 
-export default function LetterBackdrop({ day, title, nextTitle = '', anchorRef, background }: LetterBackdropProps) {
+export default function LetterBackdrop({
+  day,
+  title,
+  nextTitle = '',
+  anchorRef,
+  background,
+  preset = DEFAULT_PRESET,
+}: LetterBackdropProps) {
   const reduced = usePrefersReducedMotion();
   const isPhone = useMediaQuery(PHONE_QUERY);
   const params = useMemo(() => {
-    const preset = DEFAULT_PRESET.params;
-    const numberFill = isPhone ? Math.max(preset.numberFill, PHONE_NUMBER_FILL) : preset.numberFill;
-    return { ...preset, numberFill, background };
-  }, [background, isPhone]);
+    const base = preset.params;
+    const numberFill = isPhone ? Math.max(base.numberFill, PHONE_NUMBER_FILL) : base.numberFill;
+    return { ...base, numberFill, background };
+  }, [background, isPhone, preset]);
 
   return (
     <div className={styles.backdrop} aria-hidden="true">
@@ -133,7 +142,7 @@ export default function LetterBackdrop({ day, title, nextTitle = '', anchorRef, 
           anchorRef={anchorRef}
           isPhone={isPhone}
           params={params}
-          modeId={DEFAULT_PRESET.mode}
+          modeId={preset.mode}
           day={day}
           title={title}
           nextTitle={nextTitle}

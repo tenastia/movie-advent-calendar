@@ -37,3 +37,13 @@ export const DEFAULT_PRESET = PRESETS.find((p) => p.key === CALENDAR_PRESET_KEY)
 export function presetJson(name: string, mode: string, params: MotionParams) {
   return JSON.stringify({ name, mode, params }, null, 2) + '\n'
 }
+
+/**
+ * The letter motion for each reveal style on the Create page (the Image style
+ * shows a photo instead). Drifting is the calendar's usual look.
+ */
+export const STYLE_PRESET_KEYS = { drifting: CALENDAR_PRESET_KEY, blizzard: 'windblown' } as const
+
+export function presetForStyle(style: keyof typeof STYLE_PRESET_KEYS): Preset {
+  return PRESETS.find((p) => p.key === STYLE_PRESET_KEYS[style]) ?? DEFAULT_PRESET
+}
