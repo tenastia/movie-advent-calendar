@@ -3,8 +3,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   margin: 0;
   padding: 0;
   background: var(--colour-background-card-background);
@@ -15,7 +15,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Figma "Union": the 2px outline around the box's edge (its SVG overhangs by half a pixel). */
+/* Figma "Union": the 1.67px outline around the box's edge (its SVG overhangs by half a pixel). */
 .outline {
   position: absolute;
   top: -0.5px;
@@ -32,8 +32,9 @@
   --angle: calc(var(--progress, 0) * 360deg);
   position: absolute;
   inset: 0;
-  padding: 2px;
-  border-radius: var(--border-radius-card-small);
+  /* Same thickness and corner as the outline (1.67px, 6.67px radius). */
+  padding: calc(5px / 3);
+  border-radius: calc(20px / 3);
   background: conic-gradient(
     #2240ac 0deg,
     #3f5cd0 calc(var(--angle) / 3),
@@ -55,7 +56,7 @@
   position: relative;
   color: var(--colour-typography-number-current);
   font-weight: var(--font-weight-regular);
-  font-size: 20px;
+  font-size: 18px;
   line-height: 20px;
   /* Trim the line box to the digits' cap height, as in Figma. */
   text-box: trim-both cap alphabetic;
