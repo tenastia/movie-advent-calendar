@@ -63,6 +63,7 @@ export function HomePage() {
               title={calendar.today.title}
               nextTitle={calendar.today.nextTitle}
               image={calendar.today.reveal}
+              revealStyle={calendar.revealStyle}
             />
           </div>
 

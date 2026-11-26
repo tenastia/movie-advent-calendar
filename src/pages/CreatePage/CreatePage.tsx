@@ -8,7 +8,8 @@ import { TitleCalendar } from '../../components/TitleCalendar/TitleCalendar';
 import { TitleList } from '../../components/TitleList/TitleList';
 import { ViewToggle, type TitlesView } from '../../components/ViewToggle/ViewToggle';
 import { sampleReveal } from '../../data/sampleReveal';
-import { createCalendar } from '../../data/sharedApi';
+import { createCalendar, uploadImage } from '../../data/sharedApi';
+import type { PhotoSlot } from '../../components/PhotoTiles/PhotoTiles';
 import { getCountdownRange } from '../../lib/calendar';
 import styles from './CreatePage.module.css';
 
@@ -42,12 +43,26 @@ export function CreatePage() {
     setTitles((previous) => previous.map((t, i) => (i === index ? title : t)));
 
   const [share, setShare] = useState<ShareState>({ status: 'idle' });
+  // Image style: each December day's photo, uploaded as soon as it's picked.
+  const [photos, setPhotos] = useState<Record<number, PhotoSlot>>({});
+  const range = getCountdownRange(days);
+  const calendarDays = Array.from({ length: range.last - range.first + 1 }, (_, i) => range.first + i);
+
+  const pickPhoto = async (day: number, file: File) => {
+    setPhotos((current) => ({ ...current, [day]: { status: 'uploading' } }));
+    try {
+      const { key, url } = await uploadImage(file);
+      setPhotos((current) => ({ ...current, [day]: { status: 'ready', key, url } }));
+    } catch (error) {
+      setPhotos((current) => ({ ...current, [day]: { status: 'error', message: (error as Error).message } }));
+    }
+  };
   const nameInput = () => document.getElementById(nameId) as HTMLInputElement | null;
 
   // Any edit after sharing means the link no longer matches what's on screen.
   useEffect(() => {
     setShare((current) => (current.status === 'saving' ? current : { status: 'idle' }));
-  }, [name, days, titles, revealStyle]);
+  }, [name, days, titles, revealStyle, photos]);
 
   const copy = async (url: string) => {
     try {
@@ -77,9 +92,24 @@ export function CreatePage() {
       return;
     }
 
+    let images: (string | null)[] | undefined;
+    if (revealStyle === 'image') {
+      const slots = calendarDays.map((d) => photos[d]);
+      if (slots.some((p) => p?.status === 'uploading')) {
+        setShare({ status: 'error', message: 'Wait for the photos to finish uploading.' });
+        return;
+      }
+      images = slots.map((p) => (p?.status === 'ready' ? p.key : null));
+      const missingPhotos = images.filter((k) => !k).length;
+      if (missingPhotos) {
+        setShare({ status: 'error', message: `Add a photo for each day first (${missingPhotos} to go).` });
+        return;
+      }
+    }
+
     setShare({ status: 'saving' });
     try {
-      const id = await createCalendar({ name: name.trim(), length: days, revealStyle, movies });
+      const id = await createCalendar({ name: name.trim(), length: days, revealStyle, movies, images });
       const url = `${window.location.origin}/c/${id}`;
       setShare({ status: 'done', url, copied: await copy(url) });
     } catch (error) {
@@ -148,6 +178,11 @@ export function CreatePage() {
           onRevealStyleChange={setRevealStyle}
           onShare={handleShare}
           share={share}
+          previewDay={range.first}
+          previewTitle={titles[range.first - 1]?.trim() || 'The Holdovers'}
+          photoDays={calendarDays}
+          photos={photos}
+          onPickPhoto={pickPhoto}
         />
       </main>
     </div>
