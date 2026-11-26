@@ -1,11 +1,10 @@
 import { useId } from 'react';
 import { PHONE_QUERY, useMediaQuery } from '../../hooks/useMediaQuery';
-import type { RevealImage } from '../../data/types';
+import type { RevealImage, RevealStyle } from '../../data/types';
 import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
 import { RevealArt } from '../RevealArt/RevealArt';
 import styles from './PreviewPanel.module.css';
 
-export type RevealStyle = 'drifting' | 'blizzard' | 'image';
 
 const REVEAL_STYLES = [
   { value: 'drifting', label: 'Drifting' },

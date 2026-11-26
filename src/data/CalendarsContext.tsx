@@ -1,5 +1,8 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
-import { mockCalendars } from './mockCalendar';
+import { getCalendarDay, readDayOverride } from '../lib/calendarDay';
+import { buildCalendar } from './buildCalendar';
+import { useAllGuessRecords } from './guessStore';
+import { movieLists } from './movieLists';
 import type { Calendar } from './types';
 
 interface CalendarsState {
@@ -13,7 +16,13 @@ const CalendarsContext = createContext<CalendarsState | null>(null);
 
 /** The user's calendars and which one is open, shared across pages. */
 export function CalendarsProvider({ children }: { children: ReactNode }) {
-  const calendars = mockCalendars;
+  // Today's December day (or ?day=N); read once per visit.
+  const [currentDay] = useState(() => getCalendarDay(new Date(), readDayOverride(window.location.search)));
+  const records = useAllGuessRecords();
+  const calendars = useMemo(
+    () => movieLists.map((list) => buildCalendar(list, currentDay, records[list.id] ?? {})),
+    [currentDay, records],
+  );
   const [activeId, setActiveId] = useState(calendars[0].id);
 
   const value = useMemo(

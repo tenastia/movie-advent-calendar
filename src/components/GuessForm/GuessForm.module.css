@@ -1,9 +1,14 @@
+.wrap {
+  position: relative;
+  width: 386px;
+  max-width: 100%;
+}
+
 .form {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  width: 386px;
-  max-width: 100%;
+  width: 100%;
 }
 
 .field {
@@ -36,11 +41,6 @@
 /* Figma InputField State=Focused */
 .input:focus {
   border-color: var(--colour-border-input-focus);
-}
-
-.input:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
 }
 
 /* Figma "cta" component */
@@ -76,11 +76,6 @@
   outline-offset: 2px;
 }
 
-.submit:disabled {
-  cursor: not-allowed;
-  opacity: 0.4;
-}
-
 .attempts {
   margin: 0;
   color: var(--colour-typography-input-text);
@@ -90,9 +85,90 @@
   letter-spacing: 0.12px;
 }
 
+/* "So close!" / "You got it!": centred where the field was. */
+.outcome {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: var(--font-weight-regular);
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.32px;
+  pointer-events: none;
+}
+
+/* Decided before this visit: the outcome is simply there. */
+.done .form {
+  opacity: 0;
+}
+
+/* Decided just now: the field shrinks, blurs and fades into the void, then the words surface. */
+.animate .form {
+  animation: into-the-void 1600ms cubic-bezier(0.55, 0, 0.75, 0.2) both;
+}
+
+.animate .outcome {
+  animation: surface 900ms cubic-bezier(0.2, 0.7, 0.2, 1) 1150ms both;
+}
+
+@keyframes into-the-void {
+  0% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+
+  55% {
+    opacity: 0.45;
+    filter: blur(2px);
+    transform: scale(0.96);
+  }
+
+  100% {
+    opacity: 0;
+    filter: blur(14px);
+    transform: scale(0.78);
+  }
+}
+
+@keyframes surface {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(6px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .input,
   .submit {
     transition: none;
+  }
+
+  .animate .form {
+    animation: fade-out 300ms ease-out both;
+  }
+
+  .animate .outcome {
+    animation: fade-in 300ms ease-out 300ms both;
+  }
+
+  @keyframes fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
   }
 }
