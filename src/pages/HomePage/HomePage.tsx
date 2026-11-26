@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router';
 import { CalendarTabs } from '../../components/CalendarTabs/CalendarTabs';
 import { CardStack } from '../../components/CardStack/CardStack';
@@ -13,11 +14,21 @@ import { PHONE_QUERY, useMediaQuery } from '../../hooks/useMediaQuery';
 import { isCorrectGuess } from '../../lib/guessMatch';
 import styles from './HomePage.module.css';
 
+// Only loads for a calendar that hasn't started yet.
+const Snowfall = lazy(() => import('../../components/Snowfall/Snowfall'));
+
+/** The page background, which the snowfall canvas paints. */
+function pageBackground() {
+  return getComputedStyle(document.documentElement).getPropertyValue('--colour-background-background').trim() || '#111111';
+}
+
 export function HomePage() {
   const { active: calendar } = useCalendars();
   const navigate = useNavigate();
   // Phones show today's date box instead of the pile of cards; it opens the days so far.
   const isPhone = useMediaQuery(PHONE_QUERY);
+  // Before its first day a calendar has no movie: snow, and when it starts.
+  const started = calendar.started;
   const [daysOpen, setDaysOpen] = useState(false);
   const showDays = isPhone && daysOpen;
   const todayBox = useRef<HTMLButtonElement>(null);
@@ -62,16 +73,26 @@ export function HomePage() {
         <main className={styles.main}>
           <h2 className="visually-hidden">Today’s reveal</h2>
           <div className={styles.reveal}>
-            <TodaysReveal
-              day={calendar.today.day}
-              title={calendar.today.title}
-              nextTitle={calendar.today.nextTitle}
-              image={calendar.today.reveal}
-              revealStyle={calendar.revealStyle}
-            />
+            {started ? (
+              <TodaysReveal
+                day={calendar.today.day}
+                title={calendar.today.title}
+                nextTitle={calendar.today.nextTitle}
+                image={calendar.today.reveal}
+                revealStyle={calendar.revealStyle}
+              />
+            ) : (
+              // Not started yet: letters snow down the whole screen behind the page.
+              createPortal(
+                <Suspense fallback={null}>
+                  <Snowfall background={pageBackground()} />
+                </Suspense>,
+                document.body,
+              )
+            )}
           </div>
 
-          {isPhone && (
+          {isPhone && started && (
             <div className={styles.today}>
               <TodayBox
                 ref={todayBox}
@@ -93,12 +114,16 @@ export function HomePage() {
           </div>
 
           <div className={styles.guess}>
-            <GuessForm remainingAttempts={remainingAttempts} outcome={outcome} onGuess={guess} />
+            {started ? (
+              <GuessForm remainingAttempts={remainingAttempts} outcome={outcome} onGuess={guess} />
+            ) : (
+              <p className={styles.startsOn}>Starts on December {calendar.firstDay}</p>
+            )}
           </div>
         </main>
       </div>
 
-      {!isPhone && <CardStack days={calendar.days} today={calendar.today.day} />}
+      {!isPhone && started && <CardStack days={calendar.days} today={calendar.today.day} />}
       {showDays && <DaysSheet days={calendar.days} today={calendar.today.day} onClose={closeDays} />}
     </div>
   );

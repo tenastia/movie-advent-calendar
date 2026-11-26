@@ -27,6 +27,10 @@ export interface Calendar {
   revealTime: string;
   attemptsPerDay: number;
   revealStyle: RevealStyle;
+  /** First December day (25 − length). */
+  firstDay: number;
+  /** False before the first day: no movie yet, the home page shows the snowfall. */
+  started: boolean;
   today: {
     day: number;
     /** Today's movie: the answer, and the letters the day's number is made of. */

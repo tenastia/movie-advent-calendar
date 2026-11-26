@@ -51,8 +51,9 @@ describe('visibleCalendar', () => {
     expect(shared.images).toEqual(['/api/images/abcdefghij12', null, null]);
   });
 
-  it('before the calendar starts, shows its first day and the next', () => {
-    expect(visibleCalendar(stored, 9).movies).toEqual(['Klaus', 'Fargo']);
+  it('shows nothing before the calendar starts', () => {
+    expect(visibleCalendar(stored, 9)).toMatchObject({ movies: [], images: [], visibleTo: 18 });
+    expect(visibleCalendar(stored, 19).movies).toEqual(['Klaus', 'Fargo']);
   });
 
   it('shows everything on Christmas Eve', () => {
