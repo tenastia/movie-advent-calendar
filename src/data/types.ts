@@ -18,14 +18,26 @@ export interface RevealImage {
 }
 
 export interface Calendar {
-  owner: string;
+  id: string;
+  name: string;
+  description: string;
+  /** Number of days (movies), counting down to Christmas Eve. */
+  length: number;
   /** Daily reveal time, "HH:MM" in local time. */
   revealTime: string;
   attemptsPerDay: number;
+  revealStyle: RevealStyle;
   today: {
     day: number;
+    /** Today's movie: the answer, and the letters the day's number is made of. */
+    title: string;
+    /** Tomorrow's movie; its letters form the number that fades in at midnight. */
+    nextTitle?: string;
     reveal: RevealImage;
   };
   /** Days already revealed, oldest first. */
   days: CalendarDay[];
 }
+
+/** How a calendar reveals each day: letter motion presets, or a photo per day. */
+export type RevealStyle = 'drifting' | 'blizzard' | 'image';
