@@ -78,9 +78,19 @@ the Calendars screen is a sideways carousel, and the Create page is a single 358
 
 ## Current state
 
-Pages run on mock data (`src/data/mockCalendar.ts`) and local state. Not built yet:
+The calendars come from the movie lists in `src/data/movieLists.ts`: a list of N days runs to Christmas
+Eve, so its first movie is on 25 − N December. Through 1–24 December the home page shows today's movie;
+the rest of the year it previews 9 December. Guesses are checked leniently (case, accents, punctuation and
+a leading "The" don't matter; numbers must match; longer titles forgive a typo) and kept in the browser.
 
-- Guesses only count down the remaining attempts. Nothing checks them against an answer yet.
+For testing, add to the URL:
+
+- `?day=15` to show any December day (a 12-day calendar shows its first day, the 13th, until then)
+- `?reset` to forget every guess made in this browser
+- `?time=` / `?speed=` for the letter motion (see above)
+
+Not built yet:
+
 - Create page: "Share the Calendar" does nothing yet, the preview always shows the sample reveal, and
   the reveal styles (Drifting / Blizzard / Image) can be selected but don't change the preview.
   A draft is lost on reload.

@@ -3,18 +3,19 @@ import { useLocation, useNavigate } from 'react-router';
 import { CalendarTabs } from '../../components/CalendarTabs/CalendarTabs';
 import { CardStack } from '../../components/CardStack/CardStack';
 import { DaysSheet } from '../../components/DaysSheet/DaysSheet';
-import { GuessForm } from '../../components/GuessForm/GuessForm';
+import { GuessForm, type GuessOutcome } from '../../components/GuessForm/GuessForm';
 import { SiteHeader } from '../../components/SiteHeader/SiteHeader';
 import { TodayBox } from '../../components/TodayBox/TodayBox';
 import { TodaysReveal } from '../../components/TodaysReveal/TodaysReveal';
 import { useCalendars } from '../../data/CalendarsContext';
+import { recordGuess, useGuessRecords } from '../../data/guessStore';
 import { PHONE_QUERY, useMediaQuery } from '../../hooks/useMediaQuery';
+import { isCorrectGuess } from '../../lib/guessMatch';
 import styles from './HomePage.module.css';
 
 export function HomePage() {
   const { active: calendar } = useCalendars();
   const navigate = useNavigate();
-  const [guesses, setGuesses] = useState<string[]>([]);
   // Phones show today's date box instead of the pile of cards; it opens the days so far.
   const isPhone = useMediaQuery(PHONE_QUERY);
   const [daysOpen, setDaysOpen] = useState(false);
@@ -39,7 +40,12 @@ export function HomePage() {
     { id: 'others', label: 'Other Calendars' },
   ] as const;
 
-  const remainingAttempts = Math.max(0, calendar.attemptsPerDay - guesses.length);
+  // Today's guesses are kept in this browser, so a reload doesn't hand out fresh attempts.
+  const today = calendar.today.day;
+  const record = useGuessRecords(calendar.id)[today];
+  const remainingAttempts = Math.max(0, calendar.attemptsPerDay - (record?.guesses.length ?? 0));
+  const outcome: GuessOutcome = record?.solved ? 'solved' : remainingAttempts === 0 ? 'out' : 'playing';
+  const guess = (text: string) => recordGuess(calendar.id, today, text, isCorrectGuess(text, calendar.today.title));
 
   return (
     <div className={styles.page}>
@@ -82,10 +88,7 @@ export function HomePage() {
           </div>
 
           <div className={styles.guess}>
-            <GuessForm
-              remainingAttempts={remainingAttempts}
-              onGuess={(guess) => setGuesses((previous) => [...previous, guess])}
-            />
+            <GuessForm remainingAttempts={remainingAttempts} outcome={outcome} onGuess={guess} />
           </div>
         </main>
       </div>
