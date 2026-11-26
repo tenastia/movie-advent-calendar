@@ -4,9 +4,13 @@ import styles from './Snowfall.module.css';
 
 /** The letters that fall, in capitals like the movie titles' letters. */
 const LETTERS = Array.from('MOVIE ADVENT CALENDAR 2026').filter((c) => c !== ' ');
-/** The letter motion's glyph face and colour, so the snow matches it. */
+/** Digits fall 30% less often than their share of the phrase (≈12% of flakes, not 17%). */
+const DIGIT_WEIGHT = 0.66;
+const WEIGHTS = LETTERS.map((c) => (/\d/.test(c) ? DIGIT_WEIGHT : 1));
+const TOTAL_WEIGHT = WEIGHTS.reduce((sum, w) => sum + w, 0);
+/** The letter motion's glyph face and colour, in a light weight so the snow stays airy. */
 const FONT = '"JetBrains Mono", ui-monospace, monospace';
-const WEIGHT = 500;
+const WEIGHT = 300;
 const COLOUR = '241, 237, 228'; // #f1ede4
 /** Roughly one letter per this many square pixels of screen. */
 const AREA_PER_FLAKE = 8000;
@@ -26,31 +30,41 @@ interface Flake {
 }
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-const pick = <T,>(items: readonly T[]) => items[Math.floor(Math.random() * items.length)];
+
+function pickLetter() {
+  let r = Math.random() * TOTAL_WEIGHT;
+  for (let i = 0; i < LETTERS.length; i++) {
+    r -= WEIGHTS[i];
+    if (r <= 0) return LETTERS[i];
+  }
+  return LETTERS[LETTERS.length - 1];
+}
 
 function newFlake(width: number, y: number, depth = Math.random() ** 1.6): Flake {
   return {
-    char: pick(LETTERS),
+    char: pickLetter(),
     // More far flakes than near ones, as in real snow.
     depth,
     x: Math.random() * width,
     y,
     phase: Math.random() * Math.PI * 2,
-    period: lerp(5, 10, Math.random()),
-    angle: (Math.random() - 0.5) * 0.6,
-    spin: (Math.random() - 0.5) * 0.5,
+    period: lerp(10, 20, Math.random()),
+    angle: (Math.random() - 0.5) * 0.5,
+    spin: (Math.random() - 0.5) * 0.12,
   };
 }
 
-const sizeOf = (f: Flake) => lerp(10, 36, f.depth);
-const alphaOf = (f: Flake) => lerp(0.12, 0.85, f.depth);
-const speedOf = (f: Flake) => lerp(14, 50, f.depth); // px per second
-const swayOf = (f: Flake) => lerp(6, 26, f.depth); // px
+// Slow and quiet: even the nearest letters take about a minute to cross a phone screen.
+const sizeOf = (f: Flake) => lerp(9, 22, f.depth);
+const alphaOf = (f: Flake) => lerp(0.1, 0.7, f.depth);
+const speedOf = (f: Flake) => lerp(5, 16, f.depth); // px per second
+const swayOf = (f: Flake) => lerp(5, 16, f.depth); // px
 
 /**
  * Before a calendar starts: letters of "MOVIE ADVENT CALENDAR 2026" snowing
- * down the whole screen behind the page. Near letters are bigger, brighter and
- * faster; far ones small, faint and slow. With reduced motion the snow holds still.
+ * down the whole screen behind the page, slowly and calmly. Near letters are
+ * bigger, brighter and faster; far ones small, faint and slower still. With
+ * reduced motion the snow holds still.
  */
 export default function Snowfall({ background }: { background: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
