@@ -12,8 +12,12 @@ describe('buildCalendar', () => {
     expect(calendar.days[0]).toMatchObject({ title: 'Klaus' });
   });
 
-  it('starts a 12-day list on 13 December, showing its first day until then', () => {
-    expect(buildCalendar(dread, 9, {}).today).toMatchObject({ day: 13, title: 'Nosferatu' });
+  it('starts a 12-day list on 13 December; before that it has no movie or days', () => {
+    const before = buildCalendar(dread, 9, {});
+    expect(before).toMatchObject({ started: false, firstDay: 13, days: [] });
+    expect(before.today.title).toBe('');
+    expect(buildCalendar(nastia, 0, {})).toMatchObject({ started: false, firstDay: 1, days: [] });
+    expect(buildCalendar(dread, 13, {})).toMatchObject({ started: true });
     expect(buildCalendar(dread, 15, {}).today).toMatchObject({ day: 15, title: 'The Innocents' });
     expect(buildCalendar(dread, 15, {}).days.map((d) => d.title)).toEqual(['Nosferatu', 'Psycho', 'The Innocents']);
   });

@@ -95,17 +95,13 @@ uploading are rate-limited per IP. There are no accounts yet: a calendar can't b
 and the "titles up to tomorrow" rule keeps spoilers out of casual view but trusts the day the browser
 asks for.
 
-## Reveal styles
+## Reveal preview
 
-A calendar's reveal style decides what the friend sees each day. On the Create page the preview plays it,
-sped up (midnight to 13:00 in about 20 seconds):
-
-- **Drifting:** the letter motion the calendars use (`CALENDAR_PRESET_KEY`, currently `test-1`)
-- **Blizzard:** the `windblown` preset
-- **Image:** no letters; you upload a photo per day (tiles under the preview), and that day's photo is
-  the clue. Photos are resized in the browser (≤ 1600px JPEG) and stored with the calendar.
-
-The mapping is `STYLE_PRESET_KEYS` in `src/motion/presets/index.ts`.
+The Create page previews how each day is revealed: the letter motion (`CALENDAR_PRESET_KEY`, currently
+`test-1`) as it looks at 06:00, playing at real speed, with the calendar's first movie. Other reveal
+styles (Blizzard, a photo per day) are planned for a later version; the API and the home page already
+understand a calendar's `revealStyle`, and `STYLE_PRESET_KEYS` in `src/motion/presets/index.ts` maps
+styles to presets.
 
 ## Current state
 
@@ -116,7 +112,9 @@ a leading "The" don't matter; numbers must match; longer titles forgive a typo) 
 
 For testing, add to the URL:
 
-- `?day=15` to show any December day (a 12-day calendar shows its first day, the 13th, until then)
+- `?day=15` to show any December day, or `?day=0` for before 1 December. Before a calendar's first day
+  (1 December, or the 13th for a 12-day calendar) it hasn't started: letters of "movie advent calendar
+  2026" snow down the screen (`src/components/Snowfall`) and the page says when it starts.
 - `?reset` to forget every guess made in this browser
 - `?time=` / `?speed=` for the letter motion (see above)
 

@@ -8,18 +8,12 @@
   border-radius: var(--border-radius-section);
 }
 
-/* Reveal-style picker on the left; Share lines up with its bottom edge on the right. */
+/* "Preview" on the left, Share on the right. */
 .header {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
-}
-
-.picker {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
 .label {
@@ -80,23 +74,6 @@
   opacity: 0.7;
 }
 
-/* Image style: the shown day's photo, whole. */
-.photo {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-.stageHint {
-  max-width: 260px;
-  margin: 0;
-  padding: 16px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 20px;
-  text-align: center;
-}
-
 .share {
   flex: none;
   width: 225px;
@@ -106,8 +83,6 @@
   background: #d1d1d1;
   border: 1px solid #d1d1d1;
   border-radius: 46px;
-  /* Soft white glow, as in the design. */
-  box-shadow: 0 0 18px rgba(255, 255, 255, 0.65);
   color: #111;
   font-weight: var(--font-weight-regular);
   font-size: 14px;
@@ -116,14 +91,12 @@
   cursor: pointer;
   transition:
     background-color 120ms ease-out,
-    border-color 120ms ease-out,
-    box-shadow 120ms ease-out;
+    border-color 120ms ease-out;
 }
 
 .share:hover {
   background: #e6e6e6;
   border-color: #e6e6e6;
-  box-shadow: 0 0 22px rgba(255, 255, 255, 0.8);
 }
 
 .share:focus-visible {
@@ -132,21 +105,22 @@
 }
 
 /*
- * Phones (Figma 402px "Frame 23"): picker, then a 197px-tall preview, then a
- * full-width Share button without the glow, 26px apart.
+ * Phones (Figma 402px "Frame 23"): the label, a 197px-tall preview 12px below
+ * it, then a full-width Share button 26px further down.
  */
 @media (max-width: 639px) {
   .panel {
     gap: 26px;
   }
 
-  /* Let the picker, stage and button order themselves within the panel. */
+  /* Let the label, stage and button order themselves within the panel. */
   .header {
     display: contents;
   }
 
-  .photos {
-    order: 1;
+  /* 12px to the stage, like the other labels to their fields (the panel's gap is 26px). */
+  .label {
+    margin-bottom: -14px;
   }
 
   .stage {
@@ -172,12 +146,10 @@
   .share {
     width: 100%;
     border-color: var(--colour-icon-icon-action);
-    box-shadow: none;
   }
 
   .share:hover {
     border-color: var(--colour-icon-icon-action);
-    box-shadow: none;
   }
 }
 
