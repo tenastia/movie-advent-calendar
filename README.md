@@ -69,12 +69,31 @@ full-viewport canvas behind the page, centred on the reveal frame. It runs on th
 | `/`          | Home: today's reveal, guessing, and a deck of past days to flip through                  |
 | `/calendars` | Calendars: pick which calendar the home page shows (opens over the home page)            |
 | `/create`    | Create a calendar: name, length, a movie title per day (calendar or list view), preview |
+| `/c/:id`     | A calendar someone shared: opens it on the home page                                      |
 
 Routing uses React Router. Netlify serves `index.html` for every path (`public/_redirects`), so deep links work.
 
 On phones (up to 639px wide, the Figma 402px frames) the side nav becomes a bar floating at the bottom,
 the home page shows today's date box instead of the deck (tap it to open the deck of days and guesses),
 the Calendars screen is a sideways carousel, and the Create page is a single 358px column.
+
+## Sharing (API)
+
+"Share the Calendar" saves the calendar and copies a link (`/c/<id>`) for a friend. The API is a set of
+Netlify Functions (`netlify/functions`) storing data in Netlify Blobs; `npm run dev` runs them locally
+(`netlify/dev/devApi.ts`, data in `.netlify/blobs-dev`), so no Netlify account or CLI is needed to try it.
+
+| Request                          | Does                                                                     |
+| -------------------------------- | ------------------------------------------------------------------------ |
+| `POST /api/calendars`            | Saves a calendar (name, length, reveal style, movies, photos); returns its id |
+| `GET /api/calendars/:id?day=N`   | The calendar as seen on day N, with titles only up to tomorrow           |
+| `POST /api/images`               | Stores one photo (JPEG / PNG / WebP / GIF, ≤ 4 MB); returns its key and URL |
+| `GET /api/images/:key`           | Serves a photo (cached for good)                                         |
+
+Validation lives in `src/shared/sharedCalendar.ts`, shared by the app and the functions. Creating and
+uploading are rate-limited per IP. There are no accounts yet: a calendar can't be edited once shared,
+and the "titles up to tomorrow" rule keeps spoilers out of casual view but trusts the day the browser
+asks for.
 
 ## Current state
 
@@ -91,8 +110,8 @@ For testing, add to the URL:
 
 Not built yet:
 
-- Create page: "Share the Calendar" does nothing yet, the preview always shows the sample reveal, and
-  the reveal styles (Drifting / Blizzard / Image) can be selected but don't change the preview.
-  A draft is lost on reload.
+- Create page: the preview always shows the sample reveal, and the reveal styles (Drifting / Blizzard /
+  Image) can be selected but don't change the preview. A draft is lost on reload. Sharing by email
+  (recipient + note) has its own design and isn't built.
 - Every calendar reuses the one reveal image there is so far, and the calendar you pick is forgotten
   on reload.

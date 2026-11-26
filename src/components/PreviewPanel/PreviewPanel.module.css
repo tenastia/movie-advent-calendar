@@ -42,6 +42,43 @@
   border-radius: 16px;
 }
 
+/* Share button with its status line underneath, right-aligned on wide screens. */
+.shareArea {
+  position: relative;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* Below the button without moving it (the header aligns to the button's bottom edge). */
+.shareStatus {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: max-content;
+  max-width: min(360px, 80vw);
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 16px;
+  text-align: right;
+}
+
+.shareStatus:empty {
+  display: none;
+}
+
+.shareLink {
+  color: rgba(255, 255, 255, 0.9);
+  word-break: break-all;
+}
+
+.share:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
 .share {
   flex: none;
   width: 225px;
@@ -97,8 +134,20 @@
     min-height: 0;
   }
 
-  .share {
+  .shareArea {
     order: 2;
+    align-items: stretch;
+  }
+
+  .shareStatus {
+    position: static;
+    width: auto;
+    max-width: none;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .share {
     width: 100%;
     border-color: var(--colour-icon-icon-action);
     box-shadow: none;
